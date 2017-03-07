@@ -8,7 +8,13 @@
                 <div class="panel-heading">Menu</div>
 
                 <div class="panel-body">
-                    Check out our pizzas !
+                    @foreach($items as $item)
+                        <div class="item">
+                            <p href="#">{{ $item->name }} <strong>{{ $item->price }}</strong></p>
+                            <button>Add to basket</button>
+                            <em>{{ $item->ingredients }}</em>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
