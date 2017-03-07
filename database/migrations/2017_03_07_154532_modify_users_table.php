@@ -15,7 +15,7 @@ class ModifyUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('phone_number');
-            $table->integer('fidelity_points');
+            $table->integer('fidelity_points')->default(0);
         });
     }
 
@@ -27,7 +27,8 @@ class ModifyUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            $table->dropColumn('fidelity_points');
+            $table->dropColumn('phone_number');
         });
     }
 }
