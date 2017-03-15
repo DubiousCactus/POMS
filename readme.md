@@ -10,5 +10,6 @@ POMS is a Pizza Ordering Management System written by two students at VIA Univer
 - create a directory "cache" in bootstrap/
 - run *composer install*
 - run *artisan key:gen*
+- run *artisan migrate*
 
 You're good to go !
