@@ -15,11 +15,7 @@ class ItemsTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 0; $i < 15; $i++) { //Create 15 dummy pizzas/items in the database
-        	DB::table('items')->insert([
-        		'name' => $faker->sentence(3, true),
-        		'ingredients' => $faker->sentence(8, true),
-        		'price' => $faker->randomFloat(2, 55, 130) //2 decimals, min = 55, max = 130
-        	]);
-        }
+			factory(App\Item::class)->create();
+		}
     }
 }

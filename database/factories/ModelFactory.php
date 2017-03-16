@@ -17,8 +17,26 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
     return [
         'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
+		'email' => $faker->unique()->safeEmail,
+		'phone_number' => '+' . $faker->randomNumber(10),
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\Item::class, function (Faker\Generator $faker) {
+
+	return [
+		'name' => $faker->sentence(3, true),
+		'ingredients' => $faker->sentence(8, true),
+		'price' => $faker->randomFloat(2, 55, 130)
+	];
+});
+
+$factory->define(App\Topping::class, function (Faker\Generator $faker) {
+
+	return [
+		'name' => $faker->word(),
+		'price' => $faker->randomFloat(2, 5, 20)
+	];
+}):
