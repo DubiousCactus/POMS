@@ -11,9 +11,11 @@
                     @foreach($items as $item)
                         <div class="item">
                             <p href="#">{{ $item->name }} <strong>{{ $item->price }}</strong></p>
-                            <button>Add to basket</button>
                             <em>{{ $item->ingredients }}</em>
+                            <br>
+                            <button>Add to basket</button>
                         </div>
+                        <br><br>
                     @endforeach
                 </div>
             </div>

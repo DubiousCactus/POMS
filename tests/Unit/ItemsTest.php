@@ -29,5 +29,5 @@ class ItemsTest extends TestCase
     		'ingredients' => 'Pepperoni, cheese, tomato, oregano',
     		'price' => 75
 	    ]);
-    }
+	}
 }
