@@ -7,12 +7,12 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class UserTest extends TestCase
+class UsersTest extends TestCase
 {
 	use DatabaseTransactions;
 
     /**
-	 * User registration test.
+     * A basic test example.
      *
      * @return void
      */
@@ -31,23 +31,4 @@ class UserTest extends TestCase
 			'remember_token' => $user->remember_token
 		]);
     }
-	
-	/**
-	 * User login test.	
-     *
-     * @return void
-     */
-    public function testLoginUser()
-	{
-		$response = $this->get('/login');
-		$response->assertStatus(200); //Make sure the link works
-
-		/* First we register a user */
-		$user = factory(User::class)->create();
-
-		/* Then we make sure we can log him in */
-		$response = $this->actingAs($user)->get('/');
-		$response->assertStatus(200);
-    }
-
 }
