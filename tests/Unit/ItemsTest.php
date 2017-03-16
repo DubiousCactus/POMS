@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ItemsTest extends TestCase
 {
-	use DatabaseMigrations;
+	use DatabaseTransactions;
 	
     /**
      * A basic test example.
@@ -17,17 +17,13 @@ class ItemsTest extends TestCase
      * @return void
      */
     public function testCreateItem()
-    {
-    	$item = Item::create([
-    		'name' => 'Pizza royale',
-    		'ingredients' => 'Pepperoni, cheese, tomato, oregano',
-    		'price' => 75
-    	]);
+	{
+		$item = factory(Item::class)->create();
 
     	$this->assertDatabaseHas('items', [
-	        'name' => 'Pizza royale',
-    		'ingredients' => 'Pepperoni, cheese, tomato, oregano',
-    		'price' => 75
+	        'name' => $item->name,
+    		'ingredients' => $item->ingredients,
+    		'price' => $item->price
 	    ]);
 	}
 }

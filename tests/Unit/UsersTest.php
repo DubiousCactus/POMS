@@ -2,13 +2,14 @@
 
 namespace Tests\Unit;
 
+use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class UsersTest extends TestCase
 {
-	use DatabaseMigrations;
+	use DatabaseTransactions;
 
     /**
      * A basic test example.
@@ -20,7 +21,7 @@ class UsersTest extends TestCase
 		$response = $this->get('/register');
 		$response->assertStatus(200); //Make sure the link works
 
-		$user = factory(App\User::class)->create();
+		$user = factory(User::class)->create();
 
 		$this->assertDatabaseHas('users', [
 			'name' => $user->name,
