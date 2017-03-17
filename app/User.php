@@ -24,11 +24,16 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'is_admin'
+        'password', 'remember_token'
     ];
 
     public function addresses()
     {
         return $this->hasMany(Address::class);
-    }
+	}
+
+	public function isAdmin()
+	{
+		return $this->is_admin;
+	}
 }

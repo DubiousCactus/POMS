@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Auth;
 use Closure;
 
 class Admin
@@ -15,7 +16,7 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::user()->isAdmin())
+        if (!Auth::guest() && Auth::user()->isAdmin())
             return $next($request);
         else
             return back()->with(302, 'You are not an administrator.');

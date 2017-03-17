@@ -23,7 +23,7 @@ class ItemsController extends Controller
      */
     public function index()
     {
-        //
+        return view('items.index')->withItems(Item::all());
     }
 
     /**
@@ -33,7 +33,7 @@ class ItemsController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.createItem');
     }
 
     /**
@@ -44,7 +44,13 @@ class ItemsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+		$this->validate($request, [
+			'name' => 'required',
+			'ingredients' => 'required',
+			'price' => 'required|numeric'
+		]);
+
+		return Item::create($request->all());
     }
 
     /**
