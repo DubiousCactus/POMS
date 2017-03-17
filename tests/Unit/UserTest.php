@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Faker\Factory;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -21,14 +22,26 @@ class UsersTest extends TestCase
 		$response = $this->get('/register');
 		$response->assertStatus(200); //Make sure the link works
 
-		$user = factory(User::class)->create();
+		$faker = Factory::create();
 
-		$this->assertDatabaseHas('users', [
+		$user = factory(User::class)->make([
+			'password' => $faker->password() //Don't hash it cause we use the model to POST it
+		]);
+		
+		$response = $this->json('POST', '/register', [
 			'name' => $user->name,
 			'email' => $user->email,
 			'phone_number' => $user->phone_number,
 			'password' => $user->password,
-			'remember_token' => $user->remember_token
+			'password-confirmation' => $user->password
+		]);
+
+		$response->assertStatus(200);
+
+		$this->assertDatabaseHas('users', [
+			'name' => $user->name,
+			'email' => $user->email,
+			'phone_number' => $user->phone_number
 		]);
     }
 }

@@ -35,29 +35,43 @@ class ItemTest extends TestCase
 		$response = $this->actingAs($user)->get('/manage/items/add');
 		$response->assertStatus(302);
 
-		$item = factory(Item::class)->make();
+		$adminItem = factory(Item::class)->make();
 
+		/* Create item as administrator */
 		$response = $this->actingAs($adminUser)
-						->json('PUT', '/manage/items', [
-							'name' => $item->name,
-							'ingredients' => $item->ingredients,
-							'price' => $item->price
-						]);
+			->json('PUT', '/manage/items', [
+				'name' => $adminItem->name,
+				'ingredients' => $adminItem->ingredients,
+				'price' => $adminItem->price
+		]);
 
 		$response->assertStatus(200)
-				->assertJsonStructure([
-					'name',
-					'ingredients',
-					'price',
-					'updated_at',
-					'created_at',
-					'id'
-				]);
-	   	
+			->assertJsonStructure([
+				'name',
+				'ingredients',
+				'price',
+				'updated_at',
+				'created_at',
+				'id'
+			]); //Created successfuly
+
+		/* Create item as basic user */
+		$item = factory(Item::class)->make();
+
+		$response = $this->actingAs($user)
+			->json('PUT', '/manage/items', [
+				'name' => $item->name,
+				'ingredients' => $item->ingredients,
+				'price' => $item->price
+		]);
+
+		$response->assertStatus(302); //Forbidden
+
+		/* Assert the database for the adminItem, because the basic user should receive a 302 */	
     	$this->assertDatabaseHas('items', [
-	        'name' => $item->name,
-    		'ingredients' => $item->ingredients,
-    		'price' => $item->price 
+	        'name' => $adminItem->name,
+    		'ingredients' => $adminItem->ingredients,
+    		'price' => $adminItem->price 
 	    ]);
 	}
 }
