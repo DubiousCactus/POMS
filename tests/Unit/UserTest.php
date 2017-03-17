@@ -13,8 +13,8 @@ class UsersTest extends TestCase
 	use DatabaseTransactions;
 
     /**
-     * A basic test example.
-     *
+	 * User registration test.
+	 *
      * @return void
      */
     public function testRegisterUser()
@@ -28,20 +28,20 @@ class UsersTest extends TestCase
 			'password' => $faker->password() //Don't hash it cause we use the model to POST it
 		]);
 		
-		$response = $this->json('POST', '/register', [
-			'name' => $user->name,
-			'email' => $user->email,
-			'phone_number' => $user->phone_number,
-			'password' => $user->password,
-			'password-confirmation' => $user->password
-		]);
-
-		$response->assertStatus(200);
+		$response = $this->withSession(['_token'=>'test'])
+			->json('POST', '/register', [
+				'_token' => 'test',
+				'name' => $user->name,
+				'email' => $user->email,
+				'phone_number' => $user->phone_number,
+				'password' => $user->password,
+				'password_confirmation' => $user->password
+			]);
 
 		$this->assertDatabaseHas('users', [
 			'name' => $user->name,
 			'email' => $user->email,
 			'phone_number' => $user->phone_number
 		]);
-    }
+	}
 }
