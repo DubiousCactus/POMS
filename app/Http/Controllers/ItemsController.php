@@ -50,7 +50,9 @@ class ItemsController extends Controller
 			'price' => 'required|numeric'
 		]);
 
-		return Item::create($request->all());
+		Item::create($request->all());
+
+		return redirect('/manage/items');
     }
 
     /**
