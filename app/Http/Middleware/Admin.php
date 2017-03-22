@@ -15,10 +15,10 @@ class Admin
      * @return mixed
      */
     public function handle($request, Closure $next)
-    {
+	{
         if (!Auth::guest() && Auth::user()->isAdmin())
             return $next($request);
         else
-            return back()->with(302, 'You are not an administrator.');
+            return back()->with(302, 'You are not an administrator, bitch.');
     }
 }
