@@ -18,7 +18,7 @@ class Admin
 	{
         if (!Auth::guest() && Auth::user()->isAdmin())
             return $next($request);
-        else
-            return back()->with(302, 'You are not an administrator, bitch.');
+		else
+            return back()->with('error', 'You are not an administrator.');
     }
 }

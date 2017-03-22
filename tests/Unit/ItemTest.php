@@ -33,7 +33,7 @@ class ItemTest extends TestCase
 
 		/* Test: user must not get access */
 		$response = $this->actingAs($user)->get('/manage/items/add');
-		$response->assertStatus(302);
+		$response->assertSessionHas('error');
 
 		$adminItem = factory(Item::class)->make();
 		
@@ -45,7 +45,7 @@ class ItemTest extends TestCase
 				'price' => $adminItem->price
 			]);
 		
-		$response->assertStatus(302); //Created successfuly
+		$response->assertStatus(302); //Created successfuly, redirected
 
 		/* Create item as basic user */
 		$item = factory(Item::class)->make();
@@ -57,7 +57,7 @@ class ItemTest extends TestCase
 				'price' => $item->price
 		]);
 
-		$response->assertStatus(302); //Forbidden
+		$response->assertSessionHas('error'); //Forbidden
 
 		/* Assert the database for the adminItem, because the basic user should receive a 302 */	
     	$this->assertDatabaseHas('items', [
