@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use App\Topping;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
@@ -27,5 +28,10 @@ class PagesController extends Controller
 	public function manageMenu()
 	{
 		return view('admin.itemsIndex')->withItems(Item::all());
+	}
+
+	public function manageToppings()
+	{
+		return view('admin.toppingsIndex')->withToppings(Topping::all());
 	}
 }

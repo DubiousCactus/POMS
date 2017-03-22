@@ -16,5 +16,8 @@ Auth::routes();
 Route::get('/', 'PagesController@index');
 Route::get('/manage', 'PagesController@manage');
 Route::get('/manage/items', 'PagesController@manageMenu');
+Route::get('/manage/toppings', 'PagesController@manageToppings');
 Route::get('/manage/items/add', 'ItemsController@create');
+Route::get('/manage/toppings/add', 'ToppingsController@create');
 Route::put('/manage/items', 'ItemsController@store');
+Route::put('/manage/toppings', 'ToppingsController@store');

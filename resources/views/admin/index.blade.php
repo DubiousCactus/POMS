@@ -9,6 +9,7 @@
 
 				<div class="panel-body">
 					<a href="/manage/items" type="button" class="btn btn-primary">Menu</a>
+					<a href="/manage/toppings" type="button" class="btn btn-primary">Toppings</a>
                 </div>
             </div>
         </div>
