@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use Auth;
 use App\Item;
 use App\User;
 use Tests\TestCase;
@@ -30,6 +31,8 @@ class ItemTest extends TestCase
 		/* Test: adminUser must get access */
 		$response = $this->actingAs($adminUser)->get('/manage/items/add');
 		$response->assertStatus(200);
+		$response->assertSessionMissing('error');
+
 
 		/* Test: user must not get access */
 		$response = $this->actingAs($user)->get('/manage/items/add');
@@ -46,6 +49,7 @@ class ItemTest extends TestCase
 			]);
 		
 		$response->assertStatus(302); //Created successfuly, redirected
+		$response->assertSessionMissing('error');
 
 		/* Create item as basic user */
 		$item = factory(Item::class)->make();
@@ -78,6 +82,7 @@ class ItemTest extends TestCase
 		$item3 = factory(Item::class)->create();
 		$item4 = factory(Item::class)->make(); //Don't insert this one
 
+		/* A guest should be able to consult the menu */
 		$response = $this->get('/');
 		$view = $response->original; //Get the view from the landing page
 
@@ -85,5 +90,46 @@ class ItemTest extends TestCase
 		$this->assertTrue($view['items']->contains($item2));
 		$this->assertTrue($view['items']->contains($item3)); //Should contain all 3 inserted items
 		$this->assertFalse($view['items']->contains($item4)); //Should not contain this non-inserted item
+	}
+
+	/*
+	 * Item deletion test.
+	 */
+	public function testDeleteItem()
+	{
+		/* Create dummy item to be deleted */
+		$item = factory(Item::class)->create();
+
+		/* Create basic user */
+		$user = factory(User::class)->create();
+
+		/* Create admin user */
+		$adminUser = factory(User::class)->make();
+		$adminUser->is_admin = true;
+		$adminUser->save();
+
+		/* Basic user shouldn't get access to the admin panel */
+		$response = $this->actingAs($user)->get('/manage/items');
+		$response->assertSessionHas('error'); //Forbidden
+
+		/* Admin user should get access to the admin panel */
+		$response = $this->actingAs($adminUser)->get('/manage/items');
+		$response->assertStatus(200); //Okay
+
+		/* Basic user shouldn't be able to delete the item */
+		$response = $this->actingAs($user)->json('DELETE', '/manage/items/' . $item->id, []);
+		$response->assertSessionHas('error'); //Forbidden
+
+		/* Admin user should be able to delete the item */
+		$response = $this->actingAs($adminUser)->json('DELETE', '/manage/items/' . $item->id, []);
+		$response->assertStatus(302); //Redirected but okay
+		$response->assertSessionMissing('error');
+
+		/* Make sure it has been deleted from the database */
+		$this->assertDatabaseMissing('items', [
+			'name' => $item->name,
+			'ingredients' => $item->ingredients,
+			'price' => $item->price
+		]);
 	}
 }

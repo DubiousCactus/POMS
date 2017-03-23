@@ -96,7 +96,9 @@ class ItemsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Item $item)
-    {
-        //
+	{
+		$item->delete();
+
+		return redirect('/manage/items');
     }
 }

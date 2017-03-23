@@ -21,3 +21,4 @@ Route::get('/manage/items/add', 'ItemsController@create');
 Route::get('/manage/toppings/add', 'ToppingsController@create');
 Route::put('/manage/items', 'ItemsController@store');
 Route::put('/manage/toppings', 'ToppingsController@store');
+Route::delete('/manage/items/{item}', 'ItemsController@destroy');
