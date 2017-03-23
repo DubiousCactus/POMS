@@ -132,4 +132,69 @@ class ItemTest extends TestCase
 			'price' => $item->price
 		]);
 	}
+
+	/*
+	 * Item modification test.
+	 */
+	public function testUpdateItem()
+	{
+		/* Create dummy item to be deleted */
+		$item = factory(Item::class)->create();
+
+		/* Create basic user */
+		$user = factory(User::class)->create();
+
+		/* Create admin user */
+		$adminUser = factory(User::class)->make();
+		$adminUser->is_admin = true;
+		$adminUser->save();
+
+		/* Basic user shouldn't get access to the admin panel */
+		$response = $this->actingAs($user)->get('/manage/items/' . $item->id . '/edit');
+		$response->assertSessionHas('error'); //Forbidden
+
+		/* Admin user should get access to the admin panel */
+		$response = $this->actingAs($adminUser)->get('/manage/items/' . $item->id . '/edit');
+		$response->assertStatus(200); //Okay
+
+		/* Basic user shouldn't be able to delete the item */
+		$response = $this->actingAs($user)
+			->json('PATCH', '/manage/items/' . $item->id, [
+				'name' => 'Another name',
+				'ingredients' => 'Another ingredients list',
+				'price' => 0	
+			]);
+		$response->assertSessionHas('error'); //Forbidden
+
+		/* Admin user should be able to delete the item */
+		$response = $this->actingAs($adminUser)
+			->json('PATCH', '/manage/items/' . $item->id, [
+				'name' => 'Another different name',
+				'ingredients' => 'Another different ingredients list',
+				'price' => 0.5
+			]);
+		$response->assertStatus(302); //Redirected but okay
+		$response->assertSessionMissing('error');
+
+		/* Make sure the previous values are missing from the database */
+		$this->assertDatabaseMissing('items', [
+			'name' => $item->name,
+			'ingredients' => $item->ingredients,
+			'price' => $item->price
+		]);
+
+		/* Make sure the basic user's modifications are missing from the database */
+		$this->assertDatabaseMissing('items', [
+			'name' => 'Another name',
+			'ingredients' => 'Another ingredients list',
+			'price' => 0
+		]);
+
+		/* Make sure the admin user's modifications are present in the database */
+		$this->assertDatabaseHas('items', [
+			'name' => 'Another different name',
+			'ingredients' => 'Another different ingredients list',
+			'price' => 0.5
+		]);
+	}
 }

@@ -22,3 +22,6 @@ Route::get('/manage/toppings/add', 'ToppingsController@create');
 Route::put('/manage/items', 'ItemsController@store');
 Route::put('/manage/toppings', 'ToppingsController@store');
 Route::delete('/manage/items/{item}', 'ItemsController@destroy');
+Route::get('/manage/items/{item}/edit', 'ItemsController@edit');
+Route::patch('/manage/items/{item}', 'ItemsController@update');
+	

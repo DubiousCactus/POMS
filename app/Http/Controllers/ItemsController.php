@@ -74,7 +74,7 @@ class ItemsController extends Controller
      */
     public function edit(Item $item)
     {
-        //
+        return view('admin.editItem')->withItem($item);
     }
 
     /**
@@ -86,7 +86,18 @@ class ItemsController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        //
+		$this->validate($request, [
+			'name' => 'required',
+			'ingredients' => 'required',
+			'price' => 'required|min:0|numeric'
+		]);
+
+		$item->name = $request->name;
+		$item->ingredients = $request->ingredients;
+		$item->price = $request->price;
+		$item->save();
+
+		return redirect('/manage/items');
     }
 
     /**
