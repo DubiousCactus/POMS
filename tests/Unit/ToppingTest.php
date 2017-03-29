@@ -59,4 +59,46 @@ class ToppingTest extends TestCase
     		'price' => $adminTopping->price 
 	    ]);
 	}
+	
+	/*
+	 * Topping deletion test.
+	 */
+	public function testDeleteTopping()
+	{
+		/* Create dummy topping to be deleted */
+		$topping = factory(Topping::class)->create();
+
+		/* Create basic user */
+		$user = factory(User::class)->create();
+
+		/* Create admin user */
+		$adminUser = factory(User::class)->make();
+		$adminUser->is_admin = true;
+		$adminUser->save();
+
+		/* Basic user shouldn't get access to the admin panel */
+		$response = $this->actingAs($user)->get('/manage/toppings');
+		$response->assertSessionHas('error'); //Forbidden
+
+		/* Admin user should get access to the admin panel */
+		$response = $this->actingAs($adminUser)->get('/manage/toppings');
+		$response->assertStatus(200); //Okay
+
+		/* Basic user shouldn't be able to delete the topping */
+		$response = $this->actingAs($user)->json('DELETE', '/manage/toppings/' . $topping->id, []);
+		$response->assertSessionHas('error'); //Forbidden
+
+		/* Admin user should be able to delete the topping */
+		$response = $this->actingAs($adminUser)->json('DELETE', '/manage/toppings/' . $topping->id, []);
+		$response->assertStatus(302); //Redirected but okay
+		$response->assertSessionMissing('error');
+
+		/* Make sure it has been deleted from the database */
+		$this->assertDatabaseMissing('toppings', [
+			'name' => $topping->name,
+			'price' => $topping->price
+		]);
+	}
+
+
 }

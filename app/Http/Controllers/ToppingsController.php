@@ -95,6 +95,8 @@ class ToppingsController extends Controller
      */
     public function destroy(Topping $topping)
     {
-        //
+		$topping->delete();
+
+		return redirect('/manage/toppings');
     }
 }

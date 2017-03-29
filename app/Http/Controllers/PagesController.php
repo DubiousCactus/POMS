@@ -11,7 +11,7 @@ class PagesController extends Controller
 	public function __construct()
 	{
 		$this->middleware('admin')->only([
-			'manage', 'manageMenu'
+			'manage', 'manageMenu', 'manageToppings'
 		]);
 	}
 
