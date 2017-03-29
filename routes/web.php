@@ -25,3 +25,5 @@ Route::delete('/manage/items/{item}', 'ItemsController@destroy');
 Route::get('/manage/items/{item}/edit', 'ItemsController@edit');
 Route::patch('/manage/items/{item}', 'ItemsController@update');
 Route::delete('/manage/toppings/{topping}', 'ToppingsController@destroy');
+Route::get('/manage/toppings/{topping}/edit', 'ToppingsController@edit');
+Route::patch('/manage/toppings/{topping}', 'ToppingsController@update');

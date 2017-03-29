@@ -72,7 +72,7 @@ class ToppingsController extends Controller
      */
     public function edit(Topping $topping)
     {
-        //
+		return view('admin.editTopping')->withTopping($topping);
     }
 
     /**
@@ -84,7 +84,16 @@ class ToppingsController extends Controller
      */
     public function update(Request $request, Topping $topping)
     {
-        //
+		$this->validate($request, [
+			'name' => 'required',
+			'price' => 'required|min:0|numeric'
+		]);
+
+		$topping->name = $request->name;
+		$topping->price = $request->price;
+		$topping->save();
+
+		return redirect('/manage/toppings');
     }
 
     /**

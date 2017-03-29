@@ -100,5 +100,63 @@ class ToppingTest extends TestCase
 		]);
 	}
 
+	/*
+	 * Topping modification test.
+	 */
+	public function testUpdateTopping()
+	{
+		/* Create dummy item to be deleted */
+		$topping = factory(Topping::class)->create();
 
+		/* Create basic user */
+		$user = factory(User::class)->create();
+
+		/* Create admin user */
+		$adminUser = factory(User::class)->make();
+		$adminUser->is_admin = true;
+		$adminUser->save();
+
+		/* Basic user shouldn't get access to the admin panel */
+		$response = $this->actingAs($user)->get('/manage/toppings/' . $topping->id . '/edit');
+		$response->assertSessionHas('error'); //Forbidden
+
+		/* Admin user should get access to the admin panel */
+		$response = $this->actingAs($adminUser)->get('/manage/toppings/' . $topping->id . '/edit');
+		$response->assertStatus(200); //Okay
+
+		/* Basic user shouldn't be able to delete the topping */
+		$response = $this->actingAs($user)
+			->json('PATCH', '/manage/toppings/' . $topping->id, [
+				'name' => 'Another name',
+				'price' => 0	
+			]);
+		$response->assertSessionHas('error'); //Forbidden
+
+		/* Admin user should be able to delete the topping */
+		$response = $this->actingAs($adminUser)
+			->json('PATCH', '/manage/toppings/' . $topping->id, [
+				'name' => 'Another different name',
+				'price' => 0.5
+			]);
+		$response->assertStatus(302); //Redirected but okay
+		$response->assertSessionMissing('error');
+
+		/* Make sure the previous values are missing from the database */
+		$this->assertDatabaseMissing('toppings', [
+			'name' => $topping->name,
+			'price' => $topping->price
+		]);
+
+		/* Make sure the basic user's modifications are missing from the database */
+		$this->assertDatabaseMissing('toppings', [
+			'name' => 'Another name',
+			'price' => 0
+		]);
+
+		/* Make sure the admin user's modifications are present in the database */
+		$this->assertDatabaseHas('toppings', [
+			'name' => 'Another different name',
+			'price' => 0.5
+		]);
+	}
 }
