@@ -24,6 +24,13 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Category::class, function(Faker\Generator $faker) {
+
+	return [
+		'name' => $faker->word()
+	];
+});
+
 $factory->define(App\Item::class, function (Faker\Generator $faker) {
 
 	return [

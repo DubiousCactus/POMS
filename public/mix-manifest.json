@@ -1,5 +1,7 @@
 {
   "/js/app.js": "/js/app.js",
   "/css/app.css": "/css/app.css",
-  "/js/laravel.js": "/js/laravel.js"
+  "/js/laravel.js": "/js/laravel.js",
+  "/js/sweetalert.min.js": "/js/sweetalert.min.js",
+  "/css/all.css": "/css/all.css"
 }

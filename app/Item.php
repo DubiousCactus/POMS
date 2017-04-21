@@ -13,5 +13,15 @@ class Item extends Model
     public function toppings()
     {
     	return $this->belongsToMany(Topping::class, 'item_topping')->withTimeStamps();
-    }
+	}
+
+	public function category()
+	{
+		return $this->belongsToMany(Category::class);
+	}
+
+	public function isPizza()
+	{
+		return true; //To be changed of course
+	}
 }

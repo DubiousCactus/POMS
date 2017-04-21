@@ -1,5 +1,6 @@
 <?php
 
+use App\Category;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 
@@ -14,8 +15,11 @@ class ItemsTableSeeder extends Seeder
     {
         $faker = Factory::create();
 
-        for ($i = 0; $i < 15; $i++) { //Create 15 dummy pizzas/items in the database
-			factory(App\Item::class)->create();
+		foreach (Category::all() as $category) {
+			for ($i = 0; $i < 15; $i++) { //Create 15 dummy pizzas/items in the database
+				$item = factory(App\Item::class)->make();
+				$category->items()->save($item);
+			}
 		}
     }
 }
