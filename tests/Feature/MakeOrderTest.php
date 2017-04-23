@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Faker\Factory;
 use Auth;
 use App\Item;
 use App\User;
@@ -21,6 +22,8 @@ class MakeOrderTest extends TestCase
      */
     public function testMakeOrder()
 	{
+		$faker = Factory::create();
+
 		/* Creating basic user */
 		$user = factory(User::class)->create();
 
@@ -43,21 +46,21 @@ class MakeOrderTest extends TestCase
 
 		/* Guest user allowed */
 		/* Add with topping in category allowing toppings */
-		$response = addToBasket($itemWithToppings, $toppings); 
+		$response = $this->addToBasket($itemWithToppings, $toppings); 
 		$response->assertStatus(200);
 		$response->assertSessionMissing('error');
 
 		/* Add with topping in category disallowing toppings */
-		$response = addToBasket($itemWithoutToppings, $toppings);
+		$response = $this->addToBasket($itemWithoutToppings, $toppings);
 		$response->assertSessionHas('error');
 
 		/* Add without topping in category allowing toppings */
-		$response = addToBasket($itemWithToppings);
+		$response = $this->addToBasket($itemWithToppings);
 		$response->assertStatus(200);
 		$response->assertSessionMissing('error');
 
 		/* Add item with a negative quantity */
-		$response = addToBasket($itemWithoutToppings, null, -1);
+		$response = $this->addToBasket($itemWithoutToppings, null, -1);
 		$response->assertSessionHas('error'); //Forbidden
 
 		/* Confirm order and get delivery form */
@@ -77,7 +80,34 @@ class MakeOrderTest extends TestCase
 		])->get('/order/confirm');
 		$response->assertStatus(302); //Be Redirected to delivery form
 		$response->assertSessionMissing('error');
-		$response->assertViewHas($order);
+		$response->assertViewHas('order');
+
+		/* Submit delivery form */
+		/* Guest user must not be allowed */
+		$response = $this->post('/delivery/submit'/);
+		$response->assertSessionHas('error');
+
+		/* Logged in user must not be allowed if he doesn't have any confirmed order */
+		$response = $this->submitDelivery();
+		$response->assertSessionHas('error');
+
+		/* Logged in user must be allowed if he has a confirmed order */
+		$response = $this->submitDelivery($user);
+		$response->assertSessionMissing('error');
+		$response->assertViewHas('order');
+
+		/* Submit payment form */
+		/* Guest user must not be allowed */
+		$response = $this->post('/order/purchase');
+		$response->assertSessionHas('error');
+
+		/* Logged in user must not be allowed if he doesn't have any confirmed order */
+		$response = $this->submitPayment($user); 
+		/* Logged in user must be allowed if he has a confirmed order */
+		$response = $this->submitPayment($user);
+		$response->assertStatus(302); //Redirected to confirmation / error page
+		$response->assertSessionMissing('error');
+		$response->assertViewHas('confirmationNumber');
 	}
 
 	private function addToBasket($item, $toppings = null, $qty = 1) 
@@ -88,5 +118,30 @@ class MakeOrderTest extends TestCase
 			//'size' => Size::random(),
 			'toppings' => $toppings
 		]);
+	}
+
+	private function submitDelivery($user = null)
+	{
+		return  $this->actingAs($user)
+			->json('post', '/delivery/submit', [
+				'delivery' => true,
+				'street' => $faker->address(),
+				'city' => $faker->city(),
+				'zip' => $faker->number()
+			]);
+	}
+
+	private function submitPayment($user = null)
+	{
+		return $this->actingAs($user)
+			->withSession([
+				'order' => true
+			])->json('post', '/order/purchase', [
+				'credit_card' => true,
+				'number' => $faker->number(),
+				'name' => $faker->name(),
+				'expiry_date' => $faker->date(),
+				'cvr' => $faker->number()
+			]);
 	}
 }
