@@ -6,6 +6,8 @@ use Faker\Factory;
 use Auth;
 use App\Item;
 use App\User;
+use App\Topping;
+use App\Category;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -27,22 +29,34 @@ class MakeOrderTest extends TestCase
 		/* Creating basic user */
 		$user = factory(User::class)->create();
 
+		/* Creating dummy items / categories */
+		$categoryWithToppings = factory(Category::class)->make();
+		$categoryWithToppings->has_toppings = true;
+		$categoryWithToppings->save();
+
+		$categoryWithoutToppings = factory(Category::class)->create();
+		
+		factory(Item::class, 3)->make()->each(function ($value, $key) use($categoryWithToppings) {
+			$categoryWithToppings->items()->save($value);
+		});
+		factory(Item::class, 3)->make()->each(function ($value, $key) use($categoryWithoutToppings) {
+			$categoryWithoutToppings->items()->save($value);
+		});
+
 		/* Guest user must get access */
-		$response = $this->actingAs(User::guest())->get('/');
+		$response = $this->get('/');
 		$response->assertStatus(200);
 
 		/* Pick item from category allowing toppings */
-		$itemWithToppings = Category::all()->first(function ($value) {
-			return $value->hasToppings();
-		})->items()->random();
+		$itemWithToppings = Category::where('has_toppings', true)
+			->get()->random()->items()->get()->random();
 
 		/* Pick item from category disallowing toppings */
-		$itemWithoutToppings = Category::all()->first(function ($value) {
-			return !$value->hasToppings();
-		})->items()->random();
+		$itemWithoutToppings = Category::where('has_toppings', false)
+			->get()->random()->items()->get()->random();
 
 		/* Add to basket: with topping */
-		$toppings = Topping::random(3)->toArray();
+		$toppings = Topping::all()->random(3)->toArray();
 
 		/* Guest user allowed */
 		/* Add with topping in category allowing toppings */
@@ -84,7 +98,7 @@ class MakeOrderTest extends TestCase
 
 		/* Submit delivery form */
 		/* Guest user must not be allowed */
-		$response = $this->post('/delivery/submit'/);
+		$response = $this->post('/delivery/submit/');
 		$response->assertSessionHas('error');
 
 		/* Logged in user must not be allowed if he doesn't have any confirmed order */
@@ -112,7 +126,7 @@ class MakeOrderTest extends TestCase
 
 	private function addToBasket($item, $toppings = null, $qty = 1) 
 	{
-		return $this->json->('POST', '/order', [
+		return $this->json('POST', '/order', [
 			'item' => $item,
 			'quantity' => $qty,
 			//'size' => Size::random(),

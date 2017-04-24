@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Auth;
 use App\Item;
 use App\User;
+use App\Category;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -28,6 +29,9 @@ class ItemTest extends TestCase
 		/* Then a dummy basic user */
 		$user = factory(User::class)->create();
 
+		/* Dummy category */
+		$category = factory(Category::class)->create();
+
 		/* Test: adminUser must get access */
 		$response = $this->actingAs($adminUser)->get('/manage/items/add');
 		$response->assertStatus(200);
@@ -45,7 +49,8 @@ class ItemTest extends TestCase
 			->json('PUT', '/manage/items', [
 				'name' => $adminItem->name,
 				'ingredients' => $adminItem->ingredients,
-				'price' => $adminItem->price
+				'price' => $adminItem->price,
+				'category' => $category->id
 			]);
 		
 		$response->assertStatus(302); //Created successfuly, redirected
@@ -58,7 +63,8 @@ class ItemTest extends TestCase
 			->json('PUT', '/manage/items', [
 				'name' => $item->name,
 				'ingredients' => $item->ingredients,
-				'price' => $item->price
+				'price' => $item->price,
+				'category' => $category->id
 		]);
 
 		$response->assertSessionHas('error'); //Forbidden
@@ -77,9 +83,13 @@ class ItemTest extends TestCase
 	 */
 	public function testGetItemsIndex()
 	{
-		$item1 = factory(Item::class)->create();
-		$item2 = factory(Item::class)->create();
-		$item3 = factory(Item::class)->create();
+		$item1 = factory(Item::class)->make();
+		$item2 = factory(Item::class)->make();
+		$item3 = factory(Item::class)->make();
+
+		$category = factory(Category::class)->create();
+		$category->items()->saveMany([$item1, $item2, $item3]);
+
 		$item4 = factory(Item::class)->make(); //Don't insert this one
 
 		/* A guest should be able to consult the menu */
@@ -98,7 +108,9 @@ class ItemTest extends TestCase
 	public function testDeleteItem()
 	{
 		/* Create dummy item to be deleted */
-		$item = factory(Item::class)->create();
+		$item = factory(Item::class)->make();
+		$category = factory(Category::class)->create();
+		$category->items()->save($item);
 
 		/* Create basic user */
 		$user = factory(User::class)->create();
@@ -139,7 +151,9 @@ class ItemTest extends TestCase
 	public function testUpdateItem()
 	{
 		/* Create dummy item to be deleted */
-		$item = factory(Item::class)->create();
+		$item = factory(Item::class)->make();
+		$category = factory(Category::class)->create();
+		$category->items()->save($item);
 
 		/* Create basic user */
 		$user = factory(User::class)->create();
