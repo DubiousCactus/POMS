@@ -27,3 +27,15 @@ Route::patch('/manage/items/{item}', 'ItemsController@update');
 Route::delete('/manage/toppings/{topping}', 'ToppingsController@destroy');
 Route::get('/manage/toppings/{topping}/edit', 'ToppingsController@edit');
 Route::patch('/manage/toppings/{topping}', 'ToppingsController@update');
+
+Route::resource('/order', 'OrdersController');
+
+Route::post('/basket', 'BasketController@add');
+
+
+use \App\Item;
+use \App\Cart;
+
+Route::get('/test', function() {
+	dd(app(Cart::class)->add(Item::first(), 1)->all());
+});

@@ -127,10 +127,20 @@ class MakeOrderTest extends TestCase
 	private function addToBasket($item, $toppings = null, $qty = 1) 
 	{
 		return $this->json('POST', '/order', [
-			'item' => $item,
-			'quantity' => $qty,
-			//'size' => Size::random(),
-			'toppings' => $toppings
+			'items' => [
+				[
+					'item' => $item,
+					'quantity' => $qty,
+					//'size' => Size::random(),
+					'toppings' => $toppings
+				],
+				[
+					'item' => $item,
+					'quantity' => 1,
+					//'size' => Size::random(),
+					'toppings' => null
+				]
+			]
 		]);
 	}
 
