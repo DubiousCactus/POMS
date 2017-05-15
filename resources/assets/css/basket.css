@@ -1,0 +1,14 @@
+.total {
+	float: right;
+    padding-right: 50px;
+    font-size: 25px;
+}
+
+.basket-header {
+	font-size: 26px;
+}
+
+.changeQuantity {
+	width: 12%;
+    text-align: right;
+}

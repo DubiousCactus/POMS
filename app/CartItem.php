@@ -39,4 +39,9 @@ class CartItem
 	{
 		$this->size = $size;
 	}
+
+	public function getHash()
+	{
+		return "test";
+	}
 }

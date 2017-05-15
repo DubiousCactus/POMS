@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Cart;
+use App\ShoppingCart;
 use Illuminate\Support\ServiceProvider;
 
 class CartServiceProvider extends ServiceProvider
@@ -24,9 +24,8 @@ class CartServiceProvider extends ServiceProvider
      */
     public function register()
 	{
-        $this->app->singleton(Cart::class, function($app) {
-			return new Cart();
+		$this->app->singleton('cart', function() {
+			return new ShoppingCart();
 		});
-
     }
 }

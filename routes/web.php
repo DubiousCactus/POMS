@@ -31,11 +31,8 @@ Route::patch('/manage/toppings/{topping}', 'ToppingsController@update');
 Route::resource('/order', 'OrdersController');
 
 Route::post('/basket', 'BasketController@add');
+Route::get('/basket', 'BasketController@index');
 
-
-use \App\Item;
-use \App\Cart;
-
-Route::get('/test', function() {
-	dd(app(Cart::class)->add(Item::first(), 1)->all());
+Route::get('/basket/destroy', function() {
+	Cart::destroy();
 });

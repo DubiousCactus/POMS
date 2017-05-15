@@ -13,6 +13,8 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/all.css') }}" rel="stylesheet">
+	
+	@yield('header')
 
     <!-- Scripts -->
     <script>
@@ -78,6 +80,7 @@
                                 </ul>
                             </li>
                         @endif
+						<li><a href="/basket"><span class="glyphicon glyphicon-shopping-cart">{{ Cart::count() }}</span></a></li>
                     </ul>
                 </div>
             </div>
