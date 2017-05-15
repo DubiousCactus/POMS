@@ -91,11 +91,14 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('js/laravel.js') }}"></script>
-    <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script src="{{ mix('js/all.js') }}"></script>
+
+	@yield('scripts')
 
 	<script>
-		@yield('scripts')
+		@yield('footer.scripts')
 	</script>
+
+	@include('footer')
 </body>
 </html>

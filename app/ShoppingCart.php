@@ -18,7 +18,7 @@ class ShoppingCart
 		}
 	}
 
-	public function add(Item $item, int $qty) //, Size $size)
+	public function add(Item $item, Size $size, array toppings = null)
 	{
 		$newItem = new CartItem($item, $qty);
 		$this->items->push($newItem);

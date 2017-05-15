@@ -22,6 +22,6 @@ class Item extends Model
 
 	public function isPizza()
 	{
-		return true; //To be changed of course
+		return $this->category->has_toppings;
 	}
 }

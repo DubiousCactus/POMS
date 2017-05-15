@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use JavaScript;
 use App\Topping;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,13 @@ class PagesController extends Controller
 	}
 
     public function index()
-    {
+	{
+		JavaScript::put([
+			'token' => csrf_token(),
+			'toppings' => Topping::all()->toJson(),
+			//'sizes' => Size::all()->toJson()
+		]);
+
         return view('home')->withItems(Item::all());
 	}
 

@@ -12,12 +12,7 @@
                             <p>{{ $item->name }} <strong>{{ $item->price }}</strong></p>
                             <em>{{ $item->ingredients }}</em>
                             <br>
-							<form method="POST" action="/basket">
-								{{ csrf_field() }}
-								<input type="hidden" name="itemId" value="{{ $item->id }}">
-								<input type="hidden" name="qty" value=1>
-								<button type="submit" class="btn btn-primary">Add to basket</button>
-							</form>
+							<a id="add-basket" data-isPizza="{{ $item->isPizza() }}" data-id="{{ $item->id }}" class="btn btn-primary" href="#">Add to basket</a>
                         </div>
                         <br><br>
                     @endforeach
@@ -28,8 +23,12 @@
 </div>
 @endsection
 
+@section('scripts')
+	<script src="{{ mix('js/home.js') }}"></script>
+@stop
+
 @if(session()->has('success') && session('success'))
-	@section('scripts')
+	@section('footer.scripts')
 		swal("Added to basket !");
 	@endsection
 @endif
