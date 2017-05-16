@@ -63,12 +63,14 @@ class BasketController extends Controller
 	{
 		$this->validate($request, [
 			'choice' => 'required',
-			'street' => 'required_if:choice,delivery',
-			'city' => 'required_if:choice,delivery',
-			'zip' => 'required_if:choice,delivery|numeric'
+			'address' => 'required',
+			'registeredAddress' => 'required_if:address,existing',
+			'street' => 'required_if:address,new',
+			'city' => 'required_if:address,new',
+			'zip' => 'required_if:address,new|numeric'
 		]);
 
-		if ($request->choice == 'delivery') {
+		if ($request->address == 'new') {
 			$address = Address::make([
 				'street' => $request->street,
 				'city' => $request->city,
@@ -76,6 +78,13 @@ class BasketController extends Controller
 			]);
 
 			$address = Auth::user()->addresses()->save($address);
+
+			session([
+				'delivery.choice' => 'delivery',
+				'delivery.address' => $address->id
+			]);
+		} else if ($request->address == 'existing') {
+			$address = Address::find($request->registeredAddress);
 
 			session([
 				'delivery.choice' => 'delivery',

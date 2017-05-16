@@ -13,5 +13,10 @@ class Address extends Model
     public function user()
     {
     	return $this->belongsTo(User::class);
-    }
+	}
+
+	public function getCanonicalForm()
+	{
+		return $this->street . ", " . $this->zip . " " . $this->city;
+	}
 }

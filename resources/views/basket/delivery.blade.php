@@ -20,57 +20,60 @@
 						<br><br>
 						<div id="delivery-form" class="disabled">
 							@if (Auth::user()->addresses->count() > 0)
-								<p>Use existing address:<p>
-								<ul>
+								<input type="radio" name="address" value="existing" checked>&nbsp;Use one of my addresses&nbsp;&nbsp;
+								<select name="registeredAddress">
 								@foreach(Auth::user()->addresses as $address)
-									<li>{{ $address->getCanonicalForm() }}</li>
+									<option value="{{ $address->id }}">{{ $address->getCanonicalForm() }}</option>
 								@endforeach
-								<ul>
+								</select>
 							@else
-								<p>You don't have any registered address.</p>
+								<em>You don't have any registered address.</em>
 							@endif
 							<br><br>
-							<p>Add a new address:</p>
 							
-							<div class="form-group{{ $errors->has('street') ? ' has-error' : '' }}">
-								<label for="street" class="col-md-4 control-label">Street</label>
+							<input type="radio" id="new-address" name="address" value="new" {{ Auth::user()->addresses->count() > 0 ? '' : 'checked' }}>&nbsp;Use a new address
 
-								<div class="col-md-6">
-									<input id="street" type="text" class="form-control" name="street" value="{{ old('street') }}" autofocus disabled>
+							<div id="address-form" {{ Auth::user()->addresses->count() > 0 ? 'class=disabled' : '' }}>
+								<div class="form-group{{ $errors->has('street') ? ' has-error' : '' }}">
+									<label for="street" class="col-md-4 control-label">Street</label>
 
-									@if ($errors->has('street'))
-										<span class="help-block">
-											<strong>{{ $errors->first('street') }}</strong>
-										</span>
-									@endif
+									<div class="col-md-6">
+										<input id="street" type="text" class="form-control" name="street" value="{{ old('street') }}" autofocus disabled>
+
+										@if ($errors->has('street'))
+											<span class="help-block">
+												<strong>{{ $errors->first('street') }}</strong>
+											</span>
+										@endif
+									</div>
 								</div>
-							</div>
 
-							<div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
-								<label for="city" class="col-md-4 control-label">City</label>
+								<div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
+									<label for="city" class="col-md-4 control-label">City</label>
 
-								<div class="col-md-6">
-									<input id="city" type="text" class="form-control" name="city" value="{{ old('city') }}" autofocus disabled>
+									<div class="col-md-6">
+										<input id="city" type="text" class="form-control" name="city" value="{{ old('city') }}" autofocus disabled>
 
-									@if ($errors->has('city'))
-										<span class="help-block">
-											<strong>{{ $errors->first('city') }}</strong>
-										</span>
-									@endif
+										@if ($errors->has('city'))
+											<span class="help-block">
+												<strong>{{ $errors->first('city') }}</strong>
+											</span>
+										@endif
+									</div>
 								</div>
-							</div>
 
-							<div class="form-group{{ $errors->has('zip') ? ' has-error' : '' }}">
-								<label for="zip" class="col-md-4 control-label">Zip</label>
+								<div class="form-group{{ $errors->has('zip') ? ' has-error' : '' }}">
+									<label for="zip" class="col-md-4 control-label">Zip</label>
 
-								<div class="col-md-6">
-									<input id="zip" type="text" pattern="[0-9]{4}" class="form-control" name="zip" value="{{ old('zip') }}" autofocus disabled>
+									<div class="col-md-6">
+										<input id="zip" type="text" pattern="[0-9]{4}" class="form-control" name="zip" value="{{ old('zip') }}" autofocus disabled>
 
-									@if ($errors->has('zip'))
-										<span class="help-block">
-											<strong>{{ $errors->first('zip') }}</strong>
-										</span>
-									@endif
+										@if ($errors->has('zip'))
+											<span class="help-block">
+												<strong>{{ $errors->first('zip') }}</strong>
+											</span>
+										@endif
+									</div>
 								</div>
 							</div>
 						</div>

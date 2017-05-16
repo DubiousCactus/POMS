@@ -2,6 +2,6 @@
 	background-color: #eeeeee;
 }
 
-#delivery-form {
+#delivery-form, #address-form {
     padding: 20px;
 }
