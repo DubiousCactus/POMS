@@ -10340,6 +10340,10 @@ return jQuery;
 
 			$('#delivery-form').removeClass('disabled');
 
+			$('input[name=address]').each(function (key, value) {
+				$(value).removeAttr('disabled');
+			});
+
 			if ($('#new-address').prop('checked')) {
 				$('input[type=text]').each(function (key, value) {
 					$(value).removeAttr('disabled');
@@ -10349,6 +10353,10 @@ return jQuery;
 
 			$('#delivery-form').addClass('disabled');
 			$('input[type=text]').each(function (key, value) {
+				$(value).prop('disabled', true);
+			});
+
+			$('input[name=address]').each(function (key, value) {
 				$(value).prop('disabled', true);
 			});
 		}

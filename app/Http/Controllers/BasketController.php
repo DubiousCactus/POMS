@@ -63,14 +63,18 @@ class BasketController extends Controller
 	{
 		$this->validate($request, [
 			'choice' => 'required',
-			'address' => 'required',
+			'address' => 'required_if:choice,delivery',
 			'registeredAddress' => 'required_if:address,existing',
 			'street' => 'required_if:address,new',
 			'city' => 'required_if:address,new',
 			'zip' => 'required_if:address,new|numeric'
 		]);
 
-		if ($request->address == 'new') {
+		session()->forget('delivery');
+
+		if ($request->choice == 'pick-up') {
+			session(['delivery.choice' => 'pick-up']);
+		} else if ($request->address == 'new') {
 			$address = Address::make([
 				'street' => $request->street,
 				'city' => $request->city,
@@ -90,8 +94,6 @@ class BasketController extends Controller
 				'delivery.choice' => 'delivery',
 				'delivery.address' => $address->id
 			]);
-		} else {
-			session(['delivery.choice' => 'pick-up']);
 		}
 
 		return redirect('/basket/payment');
@@ -99,6 +101,11 @@ class BasketController extends Controller
 
 	public function paymentForm()
 	{
-		return view('basket.payment');
+		if (session('delivery.choice') == 'delivery')
+			$address = Address::find(session('delivery.address'));
+		else
+			$address = null;
+
+		return view('basket.payment')->withAddress($address);
 	}
 }

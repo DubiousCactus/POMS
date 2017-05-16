@@ -20,7 +20,7 @@
 						<br><br>
 						<div id="delivery-form" class="disabled">
 							@if (Auth::user()->addresses->count() > 0)
-								<input type="radio" name="address" value="existing" checked>&nbsp;Use one of my addresses&nbsp;&nbsp;
+								<input type="radio" name="address" value="existing" checked disabled>&nbsp;Use one of my addresses&nbsp;&nbsp;
 								<select name="registeredAddress">
 								@foreach(Auth::user()->addresses as $address)
 									<option value="{{ $address->id }}">{{ $address->getCanonicalForm() }}</option>
@@ -31,7 +31,7 @@
 							@endif
 							<br><br>
 							
-							<input type="radio" id="new-address" name="address" value="new" {{ Auth::user()->addresses->count() > 0 ? '' : 'checked' }}>&nbsp;Use a new address
+							<input type="radio" id="new-address" name="address" value="new" {{ Auth::user()->addresses->count() > 0 ? '' : 'checked' }} disabled>&nbsp;Use a new address
 
 							<div id="address-form" {{ Auth::user()->addresses->count() > 0 ? 'class=disabled' : '' }}>
 								<div class="form-group{{ $errors->has('street') ? ' has-error' : '' }}">
@@ -66,7 +66,7 @@
 									<label for="zip" class="col-md-4 control-label">Zip</label>
 
 									<div class="col-md-6">
-										<input id="zip" type="text" pattern="[0-9]{4}" class="form-control" name="zip" value="{{ old('zip') }}" autofocus disabled>
+										<input id="zip" type="text" pattern="[0-9]{4,5}" class="form-control" name="zip" value="{{ old('zip') }}" autofocus disabled>
 
 										@if ($errors->has('zip'))
 											<span class="help-block">

@@ -9,8 +9,13 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Choose delivery mean</div>
+                <div class="panel-heading">Payment</div>
                 <div class="panel-body">
+					@if (session('delivery.choice') == 'pick-up')
+						<p>To be picked up at the restaurant.</p>
+					@elseif (session('delivery.choice') == 'delivery')
+						<p>Delivering at: {{ $address->getCanonicalForm() }}</p>
+					@endif
 				</div>
 				 @if (count($errors) > 0)
 					<div class="alert alert-danger">

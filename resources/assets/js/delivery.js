@@ -5,6 +5,10 @@ $(document).ready(function() {
 		if ($(this).val() == 'delivery') {
 
 			$('#delivery-form').removeClass('disabled');
+
+			$('input[name=address]').each(function(key, value) {
+				$(value).removeAttr('disabled');
+			});
 			
 			if ($('#new-address').prop('checked')) {
 				$('input[type=text]').each(function(key, value) {
@@ -16,6 +20,10 @@ $(document).ready(function() {
 
 			$('#delivery-form').addClass('disabled');
 			$('input[type=text]').each(function(key, value) {
+				$(value).prop('disabled', true);
+			});
+
+			$('input[name=address]').each(function(key, value) {
 				$(value).prop('disabled', true);
 			});
 
