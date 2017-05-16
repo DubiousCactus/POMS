@@ -15,7 +15,7 @@ class CartItem
 		$this->item = $item;
 		$this->quantity = 1;
 		$this->size = $size;
-		$this->toppings = $toppings;
+		$this->toppings = $toppings ?? array();
 		$this->hash = spl_object_hash($this);
 	}
 
@@ -51,7 +51,7 @@ class CartItem
 
 	public function getTotalPrice()
 	{
-		$total = $this->item->price;
+		$total = $this->item->price + $this->size->price;
 
 		foreach ($this->toppings as $topping)
 			$total += $topping->price;
