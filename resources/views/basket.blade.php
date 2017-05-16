@@ -24,31 +24,29 @@
                     </div>
                     <hr class="delimiter">
             		@foreach(Cart::all() as $cartItem)
-                        <div class="row product">
+                        <div class="row">
                             <div class="col-md-7">
-                                <div class="col-md-8 item-details">
-									<p>
-										<a id="remove" href="/basket/{{ $cartItem->getHash() }}" data-method="DELETE" data-token="{{ csrf_token() }}">
-											<span class="glyphicon glyphicon-trash"></span>
-										</a>
-										{{ $cartItem->getItem()->name }}
-										@if ($cartItem->isPizza())
-											(<strong>{{ $cartItem->getSize()->name }} size</strong>)
-											
-											@if ($cartItem->getToppings())
-												<br><em>
-												@foreach ($cartItem->getToppings() as $topping)
-													@if ($loop->first)
-														+ {{ $topping->name }}
-													@else
-														, {{ $topping->name }}
-													@endif
-												@endforeach
-												</em>
-											@endif
+								<p>
+									<a id="remove" href="/basket/{{ $cartItem->getHash() }}" data-method="DELETE" data-token="{{ csrf_token() }}">
+										<span class="glyphicon glyphicon-trash"></span>
+									</a>
+									{{ $cartItem->getItem()->name }}
+									@if ($cartItem->isPizza())
+										(<strong>{{ $cartItem->getSize()->name }} size</strong>)
+										
+										@if ($cartItem->getToppings())
+											<br><em>
+											@foreach ($cartItem->getToppings() as $topping)
+												@if ($loop->first)
+													+ {{ $topping->name }}
+												@else
+													, {{ $topping->name }}
+												@endif
+											@endforeach
+											</em>
 										@endif
-									</p><br>
-                                </div>
+									@endif
+								</p><br>
                             </div>
                             <div class="col-md-3">
 								{{ $cartItem->getTotalPrice() }} Kr.

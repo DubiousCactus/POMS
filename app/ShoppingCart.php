@@ -60,7 +60,7 @@ class ShoppingCart
 		$total = 0;
 
 		$this->items->each(function($cartItem) use(&$total) {
-			$total += floatval($cartItem->getItem()->price);
+			$total += floatval($cartItem->getTotalPrice());
 		});
 
 		return $total;
