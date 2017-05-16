@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use App\Item;
 use App\Size;
+use App\Address;
 use App\Topping;
 use App\Facades\Cart;
 use Illuminate\Http\Request;
@@ -49,6 +51,45 @@ class BasketController extends Controller
 
 	public function index()
 	{
-		return view('basket');
+		return view('basket.index');
+	}
+
+	public function deliveryForm()
+	{
+		return view('basket.delivery');
+	}
+
+	public function delivery(Request $request)
+	{
+		$this->validate($request, [
+			'choice' => 'required',
+			'street' => 'required_if:choice,delivery',
+			'city' => 'required_if:choice,delivery',
+			'zip' => 'required_if:choice,delivery|numeric'
+		]);
+
+		if ($request->choice == 'delivery') {
+			$address = Address::make([
+				'street' => $request->street,
+				'city' => $request->city,
+				'zip' => $request->zip
+			]);
+
+			$address = Auth::user()->addresses()->save($address);
+
+			session([
+				'delivery.choice' => 'delivery',
+				'delivery.address' => $address->id
+			]);
+		} else {
+			session(['delivery.choice' => 'pick-up']);
+		}
+
+		return redirect('/basket/payment');
+	}
+
+	public function paymentForm()
+	{
+		return view('basket.payment');
 	}
 }

@@ -55,7 +55,7 @@
                         </div>
             		@endforeach
 					@if(count(Cart::all()) > 0)
-                        <a href="#" class="btn btn-primary" role="button">Purchase</a>
+                        <a href="/basket/delivery" class="btn btn-primary" role="button">Purchase</a>
 						<div class="total">
 							Total: {{ Cart::total() }} Kr.
                         </div>

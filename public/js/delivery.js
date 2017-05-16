@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 43);
+/******/ 	return __webpack_require__(__webpack_require__.s = 44);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -10329,34 +10329,36 @@ return jQuery;
 
 /***/ }),
 
-/***/ 11:
+/***/ 12:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($) {$(document).ready(function () {
 
-	$('.changeQuantity').change(function () {
-		$.ajax({
-			method: 'POST',
-			url: '/basket/' + $(this).data('hash'),
-			data: {
-				_token: $(this).data('token'),
-				_method: 'PATCH',
-				quantity: $(this).val()
-			},
-			success: function success(data) {
-				if (data == 'success') location.reload();else swal('Error', 'Oops ! Something went wrong :(');
-			}
-		});
+	$('input[name=choice]').click(function () {
+
+		if ($(this).val() == 'delivery') {
+
+			$('#delivery-form').removeClass('disabled');
+			$('input[type=text]').each(function (key, value) {
+				$(value).removeAttr('disabled');
+			});
+		} else {
+
+			$('#delivery-form').addClass('disabled');
+			$('input[type=text]').each(function (key, value) {
+				$(value).prop('disabled', true);
+			});
+		}
 	});
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
 
-/***/ 43:
+/***/ 44:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(11);
+module.exports = __webpack_require__(12);
 
 
 /***/ })

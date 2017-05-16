@@ -2,8 +2,10 @@
   "/js/app.js": "/js/app.js",
   "/css/app.css": "/css/app.css",
   "/js/home.js": "/js/home.js",
+  "/js/delivery.js": "/js/delivery.js",
   "/js/basket.js": "/js/basket.js",
   "/js/all.js": "/js/all.js",
   "/css/all.css": "/css/all.css",
-  "/css/basket.css": "/css/basket.css"
+  "/css/basket.css": "/css/basket.css",
+  "/css/delivery.css": "/css/delivery.css"
 }
