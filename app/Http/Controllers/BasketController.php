@@ -36,6 +36,17 @@ class BasketController extends Controller
 		return back();
 	}
 
+	public function update($hash, Request $request)
+	{
+		$this->validate($request, [
+			'quantity' => 'required|numeric|min:1'
+		]);
+
+		Cart::setQuantity($hash, $request->quantity);
+
+		return response('success', 200);
+	}
+
 	public function index()
 	{
 		return view('basket');

@@ -17,6 +17,7 @@ mix.js('resources/assets/js/app.js', 'public/js')
 		'resources/assets/js/sweetalert2.min.js',
 	], 'public/js/all.js')
 	.js('resources/assets/js/home.js', 'public/js')
+	.js('resources/assets/js/basket.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css')
 	.styles('resources/assets/css/sweetalert2.css', 'public/css/all.css')
 	.styles('resources/assets/css/basket.css', 'public/css/basket.css');

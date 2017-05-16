@@ -49,6 +49,16 @@ class CartItem
 		return $this->hash;
 	}
 
+	public function getTotalPrice()
+	{
+		$total = $this->item->price;
+
+		foreach ($this->toppings as $topping)
+			$total += $topping->price;
+
+		return $total * $this->quantity;
+	}
+
 	public function isPizza()
 	{
 		return $this->item->isPizza();

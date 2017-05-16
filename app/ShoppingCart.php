@@ -28,14 +28,12 @@ class ShoppingCart
 
 	public function remove($hash)
 	{
-		$this->items->forget($hash);
-
-		return $this->items;
+		return $this->items->forget($hash);
 	}
 
-	public function setQuantity(int $qty)
+	public function setQuantity($hash, int $qty)
 	{
-		return $this;
+		return $this->items->get($hash)->setQuantity($qty);
 	}
    
 	public function all()

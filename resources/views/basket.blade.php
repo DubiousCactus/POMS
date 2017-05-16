@@ -12,11 +12,6 @@
                 <div class="panel-heading">My Basket</div>
                 <div class="panel-body">
 					<div class="row">
-                        <div class="total">
-							Total: {{ Cart::total() }} Kr.
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-7">
                             <h2 class="basket-header">Products</h2>
                         </div>
@@ -38,7 +33,7 @@
 										</a>
 										{{ $cartItem->getItem()->name }}
 										@if ($cartItem->isPizza())
-											(<strong>{{ $cartItem->getSize()->name ?? '' }}</strong>)
+											(<strong>{{ $cartItem->getSize()->name }} size</strong>)
 											
 											@if ($cartItem->getToppings())
 												<br><em>
@@ -56,20 +51,35 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-								{{ $cartItem->getItem()->price * $cartItem->getQuantity() }} Kr.
+								{{ $cartItem->getTotalPrice() }} Kr.
                             </div>
-							<input class="changeQuantity" type="number" value="{{ $cartItem->getQuantity() }}" data-hash="{{ $cartItem->getHash() }}" data-token="{{ csrf_token() }}">
+							<input class="changeQuantity" type="number" min=1 value="{{ $cartItem->getQuantity() }}" data-hash="{{ $cartItem->getHash() }}" data-token="{{ csrf_token() }}">
                         </div>
             		@endforeach
 					@if(count(Cart::all()) > 0)
-                        <a href="#" class="btn btn-primary" role="button" disabled>Purchase</a>
+                        <a href="#" class="btn btn-primary" role="button">Purchase</a>
+						<div class="total">
+							Total: {{ Cart::total() }} Kr.
+                        </div>
                     @endif
                 </div>
-
-                </div>
+				 @if (count($errors) > 0)
+					<div class="alert alert-danger">
+						<ul>
+							@foreach ($errors->all() as $error)
+								<li>{{ $error }}</li>
+							@endforeach
+						</ul>
+					</div>
+				@endif
+			</div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@section('scripts')
+	<script src="{{ mix('js/basket.js') }}"></script>
+@stop
 

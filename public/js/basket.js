@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 43);
+/******/ 	return __webpack_require__(__webpack_require__.s = 42);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -10329,96 +10329,34 @@ return jQuery;
 
 /***/ }),
 
-/***/ 12:
+/***/ 11:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($) {$(document).ready(function () {
 
-	$('.add-basket').click(function () {
-
-		var itemId = $(this).data('id');
-
-		if ($(this).data('ispizza')) {
-
-			var firstIsChecked = false;
-			var htmlContent = '<strong>Size:</strong><br><br>';
-
-			JSON.parse(sizes).forEach(function (value) {
-				htmlContent += '<input type="radio" class="sizeChoice" name="sizeChoice" value="' + value.id + '"';
-
-				if (!firstIsChecked) {
-					htmlContent += ' checked';
-					firstIsChecked = true;
-				}
-
-				htmlContent += '>' + value.name + '<br>';
-			});
-
-			htmlContent += '<br><br><strong>Toppings:</strong><br><br>';
-
-			JSON.parse(toppings).forEach(function (value) {
-				htmlContent += '<input type="checkbox" name="toppings" value="' + value.id + '">' + value.name + ' <strong>(' + value.price + ' Kr.)</strong><br>';
-			});
-
-			swal({
-				title: 'Add toppings',
-				html: htmlContent,
-				customClass: 'add-basket-modal',
-				showCloseButton: true,
-				showCancelButton: true,
-				confirmButtonText: 'Add to basket'
-			}).then(function () {
-				var selectedToppings = [];
-
-				$('input[type=checkbox]:checked').each(function (key, value) {
-					selectedToppings.push($(value).val());
-				});
-
-				$.ajax({
-					method: 'POST',
-					url: '/basket/',
-					data: {
-						_token: token,
-						item: itemId,
-						size: $('.sizeChoice:checked').val(),
-						toppings: selectedToppings
-					},
-					success: function success(_success) {
-						if (_success == 'success') {
-							location.reload();
-						} else {
-							swal('Error', 'Sorry, something went wrong :(');
-						}
-					}
-				});
-			});
-		} else {
-			$.ajax({
-				method: 'POST',
-				url: '/basket/',
-				data: {
-					_token: token,
-					item: itemId
-				},
-				success: function success(_success2) {
-					if (_success2 == 'success') {
-						location.reload();
-					} else {
-						swal('Error', 'Sorry, something went wrong :(');
-					}
-				}
-			});
-		}
+	$('.changeQuantity').change(function () {
+		$.ajax({
+			method: 'POST',
+			url: '/basket/' + $(this).data('hash'),
+			data: {
+				_token: $(this).data('token'),
+				_method: 'PATCH',
+				quantity: $(this).val()
+			},
+			success: function success(data) {
+				if (data == 'success') location.reload();else swal('Error', 'Oops ! Something went wrong :(');
+			}
+		});
 	});
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
 
 /***/ }),
 
-/***/ 43:
+/***/ 42:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(12);
+module.exports = __webpack_require__(11);
 
 
 /***/ })
