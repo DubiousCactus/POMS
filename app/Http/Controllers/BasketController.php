@@ -13,6 +13,14 @@ use App\Http\Requests\AddToBasketRequest;
 
 class BasketController extends Controller
 {
+
+	public function __construct()
+	{
+		$this->middleware('auth')->except([
+			'add', 'remove', 'update', 'index'
+		]);
+	}
+
 	public function add(AddToBasketRequest $request)
 	{
 		$item = Item::find($request->item);
