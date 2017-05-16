@@ -39,6 +39,18 @@
 										{{ $cartItem->getItem()->name }}
 										@if ($cartItem->isPizza())
 											(<strong>{{ $cartItem->getSize()->name ?? '' }}</strong>)
+											
+											@if ($cartItem->getToppings())
+												<br><em>
+												@foreach ($cartItem->getToppings() as $topping)
+													@if ($loop->first)
+														+ {{ $topping->name }}
+													@else
+														, {{ $topping->name }}
+													@endif
+												@endforeach
+												</em>
+											@endif
 										@endif
 									</p><br>
                                 </div>

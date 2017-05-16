@@ -34,6 +34,11 @@ class CartItem
 		return $this->size;
 	}
 
+	public function getToppings()
+	{
+		return $this->toppings;
+	}
+
 	public function setQuantity(int $qty)
 	{
 		$this->quantity = $qty;

@@ -10,7 +10,7 @@ $(document).ready(function() {
 			var htmlContent = '<strong>Size:</strong><br><br>';
 
 			JSON.parse(sizes).forEach(function(value) {
-				htmlContent += '<input type="radio" value="' + value.id + '"';
+				htmlContent += '<input type="radio" class="sizeChoice" name="sizeChoice" value="' + value.id + '"';
 				
 				if (!firstIsChecked) {
 					htmlContent += ' checked';
@@ -35,11 +35,10 @@ $(document).ready(function() {
 				confirmButtonText: 'Add to basket'
 			}).then(function () {
 				var selectedToppings = [];
+		
 				$('input[type=checkbox]:checked').each(function(key, value) {
 					selectedToppings.push($(value).val());
 				});
-
-				console.log(selectedToppings);
 
 				$.ajax({
 					method: 'POST',
@@ -47,7 +46,7 @@ $(document).ready(function() {
 					data: {
 						_token: token,
 						item: itemId,
-						size: $('input[type=radio]:checked').val(),
+						size: $('.sizeChoice:checked').val(),
 						toppings: selectedToppings
 					},
 					success: function(success) {
@@ -72,7 +71,7 @@ $(document).ready(function() {
 					if (success == 'success') {
 						location.reload();
 					} else {
-						swal('error', 'Sorry, something went wrong :(');
+						swal('Error', 'Sorry, something went wrong :(');
 					}
 				}
 			});
