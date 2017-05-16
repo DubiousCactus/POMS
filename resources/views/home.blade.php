@@ -12,7 +12,7 @@
                             <p>{{ $item->name }} <strong>{{ $item->price }}</strong></p>
                             <em>{{ $item->ingredients }}</em>
                             <br>
-							<a id="add-basket" data-isPizza="{{ $item->isPizza() }}" data-id="{{ $item->id }}" class="btn btn-primary" href="#">Add to basket</a>
+							<a data-isPizza="{{ $item->isPizza() }}" data-id="{{ $item->id }}" class="add-basket btn btn-primary" href="#">Add to basket</a>
                         </div>
                         <br><br>
                     @endforeach
@@ -27,8 +27,3 @@
 	<script src="{{ mix('js/home.js') }}"></script>
 @stop
 
-@if(session()->has('success') && session('success'))
-	@section('footer.scripts')
-		swal("Added to basket !");
-	@endsection
-@endif

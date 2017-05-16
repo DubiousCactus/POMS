@@ -26,7 +26,7 @@ class AddToBasketRequest extends FormRequest
     {
         $rules = [
 			'item' => 'required|numeric|exists:items,id',
-			'size' => 'required|numeric|exists:sizes,id',
+			'size' => 'sometimes|numeric|exists:sizes,id',
 		];
 
 		$inputs = $this->all();

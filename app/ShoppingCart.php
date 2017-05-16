@@ -18,16 +18,18 @@ class ShoppingCart
 		}
 	}
 
-	public function add(Item $item, Size $size, array toppings = null)
+	public function add(Item $item, Size $size = null, array $toppings = null)
 	{
-		$newItem = new CartItem($item, $qty);
-		$this->items->push($newItem);
+		$newItem = new CartItem($item, $size, $toppings);
+		$this->items->put($newItem->getHash(), $newItem);
 
 		return $this->items;
 	}
 
-	public function remove()
+	public function remove($hash)
 	{
+		$this->items->forget($hash);
+
 		return $this->items;
 	}
 
@@ -49,7 +51,8 @@ class ShoppingCart
 	public function destroy()
 	{
 		$this->items = collect();
-		session(['ShoppingCart.items' => $this->items]);
+		
+		session()->flush();
 
 		return $this->items;
 	}

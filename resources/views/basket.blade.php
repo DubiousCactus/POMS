@@ -21,7 +21,7 @@
                             <h2 class="basket-header">Products</h2>
                         </div>
                         <div class="col-md-3">
-                            <h2 class="basket-header">Price</h2>
+								<h2 class="basket-header">Price</h2>
                         </div>
                         <div class="col-md-2">
                             <h2 class="basket-header">Quantity</h2>
@@ -32,9 +32,15 @@
                         <div class="row product">
                             <div class="col-md-7">
                                 <div class="col-md-8 item-details">
-									<p>{{ $cartItem->getItem()->name }}</p>
-									<p>Size: </p>
-									<a href="/basket/remove/{{ $cartItem->getHash() }}" data-method="POST" data-token="{{ csrf_token() }}" >Remove</a>
+									<p>
+										<a id="remove" href="/basket/{{ $cartItem->getHash() }}" data-method="DELETE" data-token="{{ csrf_token() }}">
+											<span class="glyphicon glyphicon-trash"></span>
+										</a>
+										{{ $cartItem->getItem()->name }}
+										@if ($cartItem->isPizza())
+											(<strong>{{ $cartItem->getSize()->name ?? '' }}</strong>)
+										@endif
+									</p><br>
                                 </div>
                             </div>
                             <div class="col-md-3">

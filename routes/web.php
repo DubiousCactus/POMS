@@ -32,6 +32,7 @@ Route::resource('/order', 'OrdersController');
 
 Route::post('/basket', 'BasketController@add');
 Route::get('/basket', 'BasketController@index');
+Route::delete('/basket/{hash}', 'BasketController@remove');
 
 Route::get('/basket/destroy', function() {
 	Cart::destroy();

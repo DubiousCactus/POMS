@@ -1,14 +1,26 @@
 $(document).ready(function() {
 	
-	$('#add-basket').click(function() {
+	$('.add-basket').click(function() {
+		
+		var itemId = $(this).data('id');
 		
 		if ($(this).data('ispizza')) {
 			
-			var itemId = $(this).data('id');
-			var htmlContent = '<strong>Size:</strong><br><br>'
-				+ '<input type="radio" name="size" value="0" checked>Normal&nbsp;&nbsp;&nbsp;&nbsp;'
-				+ '<input type="radio" name="size" value="1">Family<br><br><br>'
-				+ '<strong>Toppings:</strong><br><br>';
+			var firstIsChecked = false;
+			var htmlContent = '<strong>Size:</strong><br><br>';
+
+			JSON.parse(sizes).forEach(function(value) {
+				htmlContent += '<input type="radio" value="' + value.id + '"';
+				
+				if (!firstIsChecked) {
+					htmlContent += ' checked';
+					firstIsChecked = true;
+				}
+					
+				htmlContent += '>' + value.name + '<br>';
+			});
+
+			htmlContent += '<br><br><strong>Toppings:</strong><br><br>';
 
 			JSON.parse(toppings).forEach(function(value) {
 				htmlContent += '<input type="checkbox" name="toppings" value="' + value.id + '">' + value.name + ' <strong>(' + value.price + ' Kr.)</strong><br>';
@@ -34,18 +46,37 @@ $(document).ready(function() {
 					url: '/basket/',
 					data: {
 						_token: token,
-						item: 21,
+						item: itemId,
 						size: $('input[type=radio]:checked').val(),
 						toppings: selectedToppings
 					},
 					success: function(success) {
-						console.log(success);
+						if (success == 'success') {
+							location.reload();
+						} else {
+							swal('Error', 'Sorry, something went wrong :(');
+						}
 					}
 				});
 
 			});
 		} else {
-			//just ajax to basket and reload ?
+			$.ajax({
+				method: 'POST',
+				url: '/basket/',
+				data: {
+					_token: token,
+					item: itemId
+				},
+				success: function(success) {
+					if (success == 'success') {
+						location.reload();
+					} else {
+						swal('error', 'Sorry, something went wrong :(');
+					}
+				}
+			});
+
 		}
 
 	});
