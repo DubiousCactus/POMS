@@ -15,9 +15,9 @@ class CreateItemToppingPivotTable extends Migration
     {
         Schema::create('item_topping', function(Blueprint $table) {
             $table->increments('id');
-            $table->integer('item_id')->unsigned();
+            $table->integer('item_id')->unsigned()->nullable();
             $table->foreign('item_id')->references('id')->on('items');
-            $table->integer('topping_id')->unsigned();
+            $table->integer('topping_id')->unsigned()->nullable();
             $table->foreign('topping_id')->references('id')->on('toppings');
             $table->timestamps();
         });

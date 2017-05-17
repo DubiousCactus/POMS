@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
 {
+	public $quantity = null;
+	public $size = null;
+
     protected $fillable = [
     	'name', 'ingredients', 'price'
     ];
@@ -24,4 +27,19 @@ class Item extends Model
 	{
 		return $this->category->has_toppings;
 	}
+
+	public function setQuantity($quantity)
+	{
+		$this->quantity = $quantity;
+
+		return $this;
+	}
+
+	public function setSize($size)
+	{
+		$this->size = $size;
+
+		return $this;
+	}
 }
+

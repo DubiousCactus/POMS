@@ -37,6 +37,7 @@ Route::patch('/basket/{hash}', 'BasketController@update');
 Route::get('/basket/delivery', 'BasketController@deliveryForm');
 Route::post('/basket/delivery', 'BasketController@delivery');
 Route::get('/basket/payment', 'BasketController@paymentForm');
+Route::post('/basket/purchase', 'BasketController@purchase');
 
 Route::get('/basket/destroy', function() {
 	Cart::destroy();

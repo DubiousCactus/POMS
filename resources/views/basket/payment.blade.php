@@ -16,6 +16,11 @@
 					@elseif (session('delivery.choice') == 'delivery')
 						<p>Delivering at: {{ $address->getCanonicalForm() }}</p>
 					@endif
+
+					<form action="/basket/purchase" method="POST">
+						{{ csrf_field() }}
+						<button type="submit" class="btn btn-primary">Purchase</button>
+					</form>
 				</div>
 				 @if (count($errors) > 0)
 					<div class="alert alert-danger">

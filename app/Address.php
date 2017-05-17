@@ -19,4 +19,9 @@ class Address extends Model
 	{
 		return $this->street . ", " . $this->zip . " " . $this->city;
 	}
+
+	public function orders()
+	{
+		return $this->hasMany(Order::class);
+	}
 }
