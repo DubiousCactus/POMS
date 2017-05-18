@@ -13,8 +13,8 @@ class ChangeSizeType extends Migration
      */
     public function up()
     {
-        Schema::table('sizes', function (Blueprint $table) {
-			//$table->dropColumn('size');
+        Schema::table('order_item_topping', function (Blueprint $table) {
+			$table->dropColumn('size');
 			$table->integer('size_id')->unsigned()->nullable();
 			$table->foreign('size_id')->references('id')->on('sizes');
         });
@@ -27,7 +27,7 @@ class ChangeSizeType extends Migration
      */
     public function down()
     {
-        Schema::table('sizes', function (Blueprint $table) {
+        Schema::table('order_item_topping', function (Blueprint $table) {
 			$table->dropForeign(['size_id']);
 			$table->dropColumn('size');
 			$table->string('size');

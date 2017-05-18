@@ -38,7 +38,7 @@ class ShoppingCart
    
 	public function all()
 	{
-		return $this->items->all();
+		return $this->items;
 	}
 
 	public function count()

@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Auth;
 use App\Item;
 use App\Size;
+use App\Order;
 use App\Address;
 use App\Topping;
 use App\Facades\Cart;
+use App\ItemToppingPivot;
 use Illuminate\Http\Request;
 use App\Http\Requests\AddToBasketRequest;
 
@@ -117,11 +119,38 @@ class BasketController extends Controller
 		return view('basket.payment')->withAddress($address);
 	}
 
-	public function purchase()
+	public function purchase(Request $request)
 	{
-		//Create order
-		Order::make([
+		$order = Auth::user()->orders()->save(
+			$this->createOrderFromSession()
+		);
 
-		]);
+		return view('basket.purchaseSuccessful')->withOrder($order);
 	}
+
+	private function createOrderFromSession()
+	{
+		$address = session('delivery.choice') == 'delivery' ? session('delivery.address') : null;
+		
+		$order = Order::make([
+			'address' => $address
+		]);
+
+		Cart::all()->each(function($cartItem, $hash) use(&$order) {
+			collect($cartItem->getToppings())->each(function($topping, $key) use(&$order, $cartItem) {
+				$order->itemToppingPivots()->attach(
+					ItemToppingPivot::create([
+						'item_id' => $cartItem->getItem()->id,
+						'topping_id' => $topping->id
+					])->id, [
+						'quantity' => $cartItem->getQuantity(),
+						'size_id' => $cartItem->getSize()->id
+					]
+				);
+			});
+		});
+
+		return $order;
+	}
+
 }

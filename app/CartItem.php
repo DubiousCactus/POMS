@@ -51,7 +51,10 @@ class CartItem
 
 	public function getTotalPrice()
 	{
-		$total = $this->item->price + $this->size->price;
+		$total = $this->item->price;
+
+		if ($this->size)
+			$total += $this->size->price;
 
 		foreach ($this->toppings as $topping)
 			$total += $topping->price;
