@@ -9,7 +9,7 @@ class ItemToppingPivot extends Model
 	protected $table = 'item_topping';
 
 	protected $fillable = [
-		'item_id', 'topping_id'
+		'item_id', 'topping_id', 'quantity', 'size'
 	];
 
 	public function item()

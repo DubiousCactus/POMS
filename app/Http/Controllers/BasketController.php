@@ -116,4 +116,12 @@ class BasketController extends Controller
 
 		return view('basket.payment')->withAddress($address);
 	}
+
+	public function purchase()
+	{
+		//Create order
+		Order::make([
+
+		]);
+	}
 }

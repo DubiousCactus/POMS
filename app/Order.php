@@ -36,6 +36,14 @@ class Order extends Model
 		return $items;
 	}
 
+	/*
+	 * Override $order->items
+	 */
+	public function getItemsAttribute()
+	{
+		return $this->items();
+	}
+
 	public function address()
 	{
 		return $this->belongsTo(Address::class);
