@@ -121,20 +121,19 @@ class BasketController extends Controller
 
 	public function purchase(Request $request)
 	{
-		$order = Auth::user()->orders()->save(
-			$this->createOrderFromSession()
-		);
-
-		return view('basket.purchaseSuccessful')->withOrder($order);
+		$order = $this->createOrderFromSession(); 
+		return view('basket.purchaseSuccessfull')->withOrder($order);
 	}
 
 	private function createOrderFromSession()
 	{
 		$address = session('delivery.choice') == 'delivery' ? session('delivery.address') : null;
 		
-		$order = Order::make([
-			'address' => $address
-		]);
+		$order = Auth::user()->orders()->save(
+			Order::make([
+				'address' => $address
+			])
+		);
 
 		Cart::all()->each(function($cartItem, $hash) use(&$order) {
 			collect($cartItem->getToppings())->each(function($topping, $key) use(&$order, $cartItem) {
