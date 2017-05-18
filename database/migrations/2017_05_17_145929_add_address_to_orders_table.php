@@ -27,7 +27,7 @@ class AddAddressToOrdersTable extends Migration
     public function down()
     {
         Schema::table('orders', function (Blueprint $table) {
-			$table->dropForeign('address_id');
+			$table->dropForeign(['address_id']);
 			$table->dropColumn('address_id');
         });
     }

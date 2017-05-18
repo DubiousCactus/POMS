@@ -26,7 +26,8 @@ class AddCategoryToItemsTable extends Migration
      */
     public function down()
     {
-        Schema::table('items', function (Blueprint $table) {
+		Schema::table('items', function (Blueprint $table) {
+			$table->dropForeign(['category_id']);
 			$table->dropColumn('category_id');
         });
     }

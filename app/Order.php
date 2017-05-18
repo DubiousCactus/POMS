@@ -17,19 +17,20 @@ class Order extends Model
 	public function itemToppingPivots()
 	{
 		return $this->belongsToMany(ItemToppingPivot::class, 'order_item_topping',
-			'order_id', 'item_topping_id');
+					'order_id', 'item_topping_id')
+					->withPivot('quantity', 'size');
 	}
 
 	public function items()
 	{
 		$items = collect();
 
-		$this->itemToppingPivots->each(function($pivot, $key) use(&$items) {
-			if (!$items->has($pivot->item->id))
-				$items->put($pivot->item->id,
-					$pivot->item
-						->setQuantity($pivot->quantity)
-						->setSize($pivot->size)
+		$this->itemToppingPivots->each(function($itemWithTopping, $key) use(&$items) {
+			if (!$items->has($itemWithTopping->item->id))
+				$items->put($itemWithTopping->item->id,
+					$itemWithTopping->item
+						->setQuantity($itemWithTopping->pivot->quantity)
+						->setSize($itemWithTopping->pivot->size)
 				);
 		});
 
