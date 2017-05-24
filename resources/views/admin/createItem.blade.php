@@ -7,10 +7,8 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Add item</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="/manage/items">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ route('item.store') }}">
 						{{ csrf_field() }}
-						
-						<input name="_method" type="hidden" value="PUT">
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Name</label>

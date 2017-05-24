@@ -14,22 +14,32 @@
 Auth::routes();
 
 Route::get('/', 'PagesController@index');
+
+/* Items */
+Route::resource('item', 'ItemsController', ['except' => [
+	'index', 'edit', 'create'
+]]);
+
+/* Toppings */
+Route::resource('topping', 'ToppingsController', ['except' => [
+	'index', 'edit', 'create'
+]]);
+
+/* Orders */
+Route::resource('order', 'OrdersController', ['except' => [
+	'index', 'edit', 'create'
+]]);
+
+/* Admin interface */
 Route::get('/manage', 'PagesController@manage');
 Route::get('/manage/items', 'PagesController@manageMenu');
 Route::get('/manage/toppings', 'PagesController@manageToppings');
 Route::get('/manage/items/add', 'ItemsController@create');
 Route::get('/manage/toppings/add', 'ToppingsController@create');
-Route::put('/manage/items', 'ItemsController@store');
-Route::put('/manage/toppings', 'ToppingsController@store');
-Route::delete('/manage/items/{item}', 'ItemsController@destroy');
 Route::get('/manage/items/{item}/edit', 'ItemsController@edit');
-Route::patch('/manage/items/{item}', 'ItemsController@update');
-Route::delete('/manage/toppings/{topping}', 'ToppingsController@destroy');
 Route::get('/manage/toppings/{topping}/edit', 'ToppingsController@edit');
-Route::patch('/manage/toppings/{topping}', 'ToppingsController@update');
 
-Route::resource('/order', 'OrdersController');
-
+/* Basket */
 Route::post('/basket', 'BasketController@add');
 Route::get('/basket', 'BasketController@index');
 Route::delete('/basket/{hash}', 'BasketController@remove');
@@ -39,6 +49,7 @@ Route::post('/basket/delivery', 'BasketController@delivery');
 Route::get('/basket/payment', 'BasketController@paymentForm');
 Route::post('/basket/purchase', 'BasketController@purchase');
 
+/* Testing */
 Route::get('/basket/destroy', function() {
 	Cart::destroy();
 });

@@ -13,7 +13,7 @@
                             <p href="#">{{ $topping->name }} <strong>{{ $topping->price }}</strong></p>
                             <br>
 							<a href="/manage/toppings/{{ $topping->id }}/edit" class="btn btn-primary">Edit</a>
-							<a href="/manage/toppings/{{ $topping->id }}" data-method="DELETE" data-confirm="Are you sure?" data-token="{{ csrf_token() }}" class="btn btn-primary">Delete</a>
+							<a href="{{ route('topping.destroy', ['topping' => $topping]) }}" data-method="DELETE" data-confirm="Are you sure?" data-token="{{ csrf_token() }}" class="btn btn-primary">Delete</a>
                         </div>
                         <br><br>
                     @endforeach

@@ -18,7 +18,7 @@ class Order extends Model
 	{
 		return $this->belongsToMany(ItemToppingPivot::class, 'order_item_topping',
 					'order_id', 'item_topping_id')
-					->withPivot('quantity', 'size_id');
+					->withPivot('quantity', 'size');
 	}
 
 	public function items()
@@ -30,7 +30,7 @@ class Order extends Model
 				$items->put($itemWithTopping->item->id,
 					$itemWithTopping->item
 						->setQuantity($itemWithTopping->pivot->quantity)
-						->setSize(Size::find($itemWithTopping->pivot->size_id))
+						->setSize($itemWithTopping->pivot->size)
 				);
 		});
 

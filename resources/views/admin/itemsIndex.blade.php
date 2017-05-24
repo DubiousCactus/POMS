@@ -14,7 +14,7 @@
                             <em>{{ $item->ingredients }}</em>
                             <br>
                             <a href="/manage/items/{{ $item->id }}/edit" class="btn btn-primary">Edit</a>
-                            <a href="/manage/items/{{ $item->id }}" data-method="DELETE" data-confirm="Are you sure ?" data-token="{{ csrf_token() }}" class="btn btn-primary">Delete</a>
+							<a href="{{ route('item.destroy', ['item' => $item]) }}" data-method="DELETE" data-confirm="Are you sure ?" data-token="{{ csrf_token() }}" class="btn btn-primary">Delete</a>
                         </div>
                         <br><br>
                     @endforeach
