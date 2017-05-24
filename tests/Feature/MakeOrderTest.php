@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Faker\Factory;
 use Auth;
 use App\Item;
+use App\Size;
 use App\User;
 use App\Topping;
 use App\Category;
@@ -29,19 +30,22 @@ class MakeOrderTest extends TestCase
 		/* Creating basic user */
 		$user = factory(User::class)->create();
 
-		/* Creating dummy items / categories */
+		/* Creating dummy items / categories / sizes */
 		$categoryWithToppings = factory(Category::class)->make();
 		$categoryWithToppings->has_toppings = true;
 		$categoryWithToppings->save();
 
-		$categoryWithoutToppings = factory(Category::class)->create();
+		$categoryWithoutToppings = factory(Category::class)->create(); //has_toppings = false by default
 		
-		factory(Item::class, 3)->make()->each(function ($value, $key) use($categoryWithToppings) {
+		factory(Item::class, 3)->make()->each(function ($value, $key) use(&$categoryWithToppings) {
 			$categoryWithToppings->items()->save($value);
 		});
-		factory(Item::class, 3)->make()->each(function ($value, $key) use($categoryWithoutToppings) {
+
+		factory(Item::class, 3)->make()->each(function ($value, $key) use(&$categoryWithoutToppings) {
 			$categoryWithoutToppings->items()->save($value);
 		});
+
+		$size = factory(Size::class)->create();
 
 		/* Guest user must get access */
 		$response = $this->get('/');
@@ -56,26 +60,22 @@ class MakeOrderTest extends TestCase
 			->get()->random()->items()->get()->random();
 
 		/* Add to basket: with topping */
-		$toppings = Topping::all()->random(3)->toArray();
+		$toppings = Topping::all()->random(3);
 
 		/* Guest user allowed */
 		/* Add with topping in category allowing toppings */
-		$response = $this->addToBasket($itemWithToppings, $toppings); 
+		$response = $this->addToBasket($itemWithToppings, $size, $toppings); 
 		$response->assertStatus(200);
-		$response->assertSessionMissing('error');
+		$response->assertSessionHas('success');
 
 		/* Add with topping in category disallowing toppings */
-		$response = $this->addToBasket($itemWithoutToppings, $toppings);
+		$response = $this->addToBasket($itemWithoutToppings, $size, $toppings);
 		$response->assertSessionHas('error');
 
 		/* Add without topping in category allowing toppings */
-		$response = $this->addToBasket($itemWithToppings);
+		$response = $this->addToBasket($itemWithToppings, $size);
 		$response->assertStatus(200);
 		$response->assertSessionMissing('error');
-
-		/* Add item with a negative quantity */
-		$response = $this->addToBasket($itemWithoutToppings, null, -1);
-		$response->assertSessionHas('error'); //Forbidden
 
 		/* Confirm order and get delivery form */
 		/* Guest user musn't be allowed */
@@ -90,7 +90,7 @@ class MakeOrderTest extends TestCase
 		/* Logged in user must be allowed if his cart is not empty */
 		$response = $this->actingAs($user)
 			->withSession([
-				'cart' => true
+				'ShoppingCart' => true
 		])->get('/order/confirm');
 		$response->assertStatus(302); //Be Redirected to delivery form
 		$response->assertSessionMissing('error');
@@ -116,7 +116,8 @@ class MakeOrderTest extends TestCase
 		$response->assertSessionHas('error');
 
 		/* Logged in user must not be allowed if he doesn't have any confirmed order */
-		$response = $this->submitPayment($user); 
+		$response = $this->submitPayment($user);
+
 		/* Logged in user must be allowed if he has a confirmed order */
 		$response = $this->submitPayment($user);
 		$response->assertStatus(302); //Redirected to confirmation / error page
@@ -124,24 +125,23 @@ class MakeOrderTest extends TestCase
 		$response->assertViewHas('confirmationNumber');
 	}
 
-	private function addToBasket($item, $toppings = null, $qty = 1) 
+	private function addToBasket($item, $size, $toppings = null) 
 	{
-		return $this->json('POST', '/order', [
-			'items' => [
-				[
-					'item' => $item,
-					'quantity' => $qty,
-					//'size' => Size::random(),
-					'toppings' => $toppings
-				],
-				[
-					'item' => $item,
-					'quantity' => 1,
-					//'size' => Size::random(),
-					'toppings' => null
-				]
-			]
+		$toppingsIds = array();
+
+		if ($toppings) {
+			$toppings->each(function($topping) use(&$toppingsIds) {
+				array_push($toppingsIds, $topping->id);
+			});
+		}
+
+		$response =  $this->json('POST', '/basket', [
+			'item' => $item->id,
+			'size' => $size->id,
+			'toppings' => $toppingsIds
 		]);
+
+		return $response;
 	}
 
 	private function submitDelivery($user = null)

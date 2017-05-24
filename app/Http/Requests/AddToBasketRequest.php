@@ -27,20 +27,8 @@ class AddToBasketRequest extends FormRequest
         $rules = [
 			'item' => 'required|numeric|exists:items,id',
 			'size' => 'sometimes|numeric|exists:sizes,id',
+			'toppings' => 'sometimes|toppings_array'
 		];
-
-		$inputs = $this->all();
-
-		if (isset($inputs['toppings'])) {
-			
-			if (!Item::find($inputs['item'])->category->has_toppings) {
-				unset($inputs['toppings']);
-				$this->replace($inputs);
-			} else {
-				foreach ($inputs['toppings'] as $index => $value)
-					$rules['toppings' . $index] = 'exists:toppings,id';
-			}
-		}
 
 		return $rules;
     }

@@ -151,7 +151,10 @@ class BasketController extends Controller
 					ItemToppingPivot::create([
 						'item_id' => $cartItem->getItem()->id,
 						'topping_id' => null
-					])
+					]), [
+						'quantity' => $cartItem->getQuantity(),
+						'size_id' => $cartItem->getSize()->id
+					]
 				);
 
 			} else {

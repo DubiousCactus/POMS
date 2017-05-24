@@ -47,3 +47,11 @@ $factory->define(App\Topping::class, function (Faker\Generator $faker) {
 		'price' => $faker->randomFloat(2, 5, 20)
 	];
 });
+
+$factory->define(App\Size::class, function (Faker\Generator $faker) {
+
+	return [
+		'name' => $faker->word(),
+		'price' => $faker->randomFloat(2, 5, 20)
+	];
+});
