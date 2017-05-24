@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Item;
+use App\Category;
 use Illuminate\Http\Request;
 
 class ItemsController extends Controller
@@ -47,10 +48,13 @@ class ItemsController extends Controller
 		$this->validate($request, [
 			'name' => 'required',
 			'ingredients' => 'required',
-			'price' => 'required|numeric'
+			'price' => 'required|numeric',
+			'category_id' => 'required|exists:categories,id'
 		]);
 
-		Item::create($request->all());
+		Category::find($request->category_id)->items()->save(
+			Item::make($request->all())
+		);
 
 		return redirect('/manage/items');
     }

@@ -35,7 +35,7 @@ class ToppingTest extends TestCase
 		
 		/* Create topping as administrator */
 		$response = $this->actingAs($adminUser)
-			->json('PUT', '/manage/toppings', [
+			->json('POST', route('topping.store'), [
 				'name' => $adminTopping->name,
 				'price' => $adminTopping->price
 			]);
@@ -46,7 +46,7 @@ class ToppingTest extends TestCase
 		$topping = factory(Topping::class)->make();
 
 		$response = $this->actingAs($user)
-			->json('PUT', '/manage/toppings', [
+			->json('POST', route('topping.store'), [
 				'name' => $topping->name,
 				'price' => $topping->price
 		]);
@@ -85,11 +85,11 @@ class ToppingTest extends TestCase
 		$response->assertStatus(200); //Okay
 
 		/* Basic user shouldn't be able to delete the topping */
-		$response = $this->actingAs($user)->json('DELETE', '/manage/toppings/' . $topping->id, []);
+		$response = $this->actingAs($user)->json('DELETE', route('topping.destroy', ['topping' => $topping]), []);
 		$response->assertSessionHas('error'); //Forbidden
 
 		/* Admin user should be able to delete the topping */
-		$response = $this->actingAs($adminUser)->json('DELETE', '/manage/toppings/' . $topping->id, []);
+		$response = $this->actingAs($adminUser)->json('DELETE', route('topping.destroy', ['topping' => $topping]), []);
 		$response->assertStatus(302); //Redirected but okay
 		$response->assertSessionMissing('error');
 
@@ -124,17 +124,17 @@ class ToppingTest extends TestCase
 		$response = $this->actingAs($adminUser)->get('/manage/toppings/' . $topping->id . '/edit');
 		$response->assertStatus(200); //Okay
 
-		/* Basic user shouldn't be able to delete the topping */
+		/* Basic user shouldn't be able to update the topping */
 		$response = $this->actingAs($user)
-			->json('PATCH', '/manage/toppings/' . $topping->id, [
+			->json('PATCH', route('topping.update', ['topping' => $topping]), [
 				'name' => 'Another name',
 				'price' => 0	
 			]);
 		$response->assertSessionHas('error'); //Forbidden
 
-		/* Admin user should be able to delete the topping */
+		/* Admin user should be able to update the topping */
 		$response = $this->actingAs($adminUser)
-			->json('PATCH', '/manage/toppings/' . $topping->id, [
+			->json('PATCH', route('topping.update', ['topping' => $topping]), [
 				'name' => 'Another different name',
 				'price' => 0.5
 			]);

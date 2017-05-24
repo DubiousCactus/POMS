@@ -42,7 +42,7 @@ class ToppingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+	{
 		$this->validate($request, [
 			'name' => 'required|unique:toppings',
 			'price' => 'required|numeric'

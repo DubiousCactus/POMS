@@ -66,6 +66,9 @@ class BasketController extends Controller
 
 	public function deliveryForm()
 	{
+		if (!Cart::all()->count())
+			return redirect('/')->with('error', 'Your basket is empty.');
+
 		return view('basket.delivery');
 	}
 
@@ -79,6 +82,9 @@ class BasketController extends Controller
 			'city' => 'required_if:address,new',
 			'zip' => 'required_if:address,new|numeric'
 		]);
+
+		if (!Cart::all()->count())
+			return back()->with('error', 'Your basket is empty.');
 
 		session()->forget('delivery');
 

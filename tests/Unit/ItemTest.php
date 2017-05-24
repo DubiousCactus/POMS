@@ -46,13 +46,12 @@ class ItemTest extends TestCase
 		
 		/* Create item as administrator */
 		$response = $this->actingAs($adminUser)
-			->json('PUT', '/manage/items', [
+			->json('POST', route('item.store'), [
 				'name' => $adminItem->name,
 				'ingredients' => $adminItem->ingredients,
 				'price' => $adminItem->price,
-				'category' => $category->id
+				'category_id' => $category->id
 			]);
-		
 		$response->assertStatus(302); //Created successfuly, redirected
 		$response->assertSessionMissing('error');
 
@@ -60,7 +59,7 @@ class ItemTest extends TestCase
 		$item = factory(Item::class)->make();
 
 		$response = $this->actingAs($user)
-			->json('PUT', '/manage/items', [
+			->json('POST', route('item.store'), [
 				'name' => $item->name,
 				'ingredients' => $item->ingredients,
 				'price' => $item->price,
@@ -129,11 +128,11 @@ class ItemTest extends TestCase
 		$response->assertStatus(200); //Okay
 
 		/* Basic user shouldn't be able to delete the item */
-		$response = $this->actingAs($user)->json('DELETE', '/manage/items/' . $item->id, []);
+		$response = $this->actingAs($user)->json('DELETE', route('item.destroy', ['item' => $item]), []);
 		$response->assertSessionHas('error'); //Forbidden
 
 		/* Admin user should be able to delete the item */
-		$response = $this->actingAs($adminUser)->json('DELETE', '/manage/items/' . $item->id, []);
+		$response = $this->actingAs($adminUser)->json('DELETE', route('item.destroy', ['item' => $item]), []);
 		$response->assertStatus(302); //Redirected but okay
 		$response->assertSessionMissing('error');
 
@@ -173,7 +172,7 @@ class ItemTest extends TestCase
 
 		/* Basic user shouldn't be able to delete the item */
 		$response = $this->actingAs($user)
-			->json('PATCH', '/manage/items/' . $item->id, [
+			->json('PATCH', route('item.update', ['item' => $item]), [
 				'name' => 'Another name',
 				'ingredients' => 'Another ingredients list',
 				'price' => 0	
@@ -182,7 +181,7 @@ class ItemTest extends TestCase
 
 		/* Admin user should be able to delete the item */
 		$response = $this->actingAs($adminUser)
-			->json('PATCH', '/manage/items/' . $item->id, [
+			->json('PATCH', route('item.update', ['item' => $item]), [
 				'name' => 'Another different name',
 				'ingredients' => 'Another different ingredients list',
 				'price' => 0.5

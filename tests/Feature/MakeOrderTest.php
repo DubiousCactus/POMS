@@ -27,8 +27,11 @@ class MakeOrderTest extends TestCase
 	{
 		$faker = Factory::create();
 
-		/* Creating basic user */
+		/* Creating basic user who is shopping */
 		$user = factory(User::class)->create();
+
+		/* Creating basic user who is not shopping (empty cart) */
+		$uselessUser = factory(User::class)->create();
 
 		/* Creating dummy items / categories / sizes */
 		$categoryWithToppings = factory(Category::class)->make();
@@ -64,34 +67,29 @@ class MakeOrderTest extends TestCase
 
 		/* Guest user allowed */
 		/* Add with topping in category allowing toppings */
-		$response = $this->addToBasket($itemWithToppings, $size, $toppings); 
+		$response = $this->addToBasket($user, $itemWithToppings, $size, $toppings); 
 		$response->assertStatus(200);
-		$response->assertSessionHas('success');
 
 		/* Add with topping in category disallowing toppings */
-		$response = $this->addToBasket($itemWithoutToppings, $size, $toppings);
-		$response->assertSessionHas('error');
+		$response = $this->addToBasket($user, $itemWithoutToppings, $size, $toppings);
+		$response->assertStatus(422);
 
 		/* Add without topping in category allowing toppings */
-		$response = $this->addToBasket($itemWithToppings, $size);
+		$response = $this->addToBasket($user, $itemWithToppings, $size);
 		$response->assertStatus(200);
-		$response->assertSessionMissing('error');
 
 		/* Confirm order and get delivery form */
 		/* Guest user musn't be allowed */
-		$response = $this->post('/order/confirm');
+		$response = $this->get('/basket/delivery');
 		$response->assertStatus(302); //Be redirected to login page
-		$response->assertSessionHas('error');
+		$response->assertHeader('location', url('/') . '/login');
 
 		/* Logged in user must not be allowed if his cart is empty */
-		$response = $this->actingAs($user)->post('/order/confirm');
+		$response = $this->get('/basket/delivery');
 		$response->assertSessionHas('error'); //Forbidden
 
 		/* Logged in user must be allowed if his cart is not empty */
-		$response = $this->actingAs($user)
-			->withSession([
-				'ShoppingCart' => true
-		])->get('/order/confirm');
+		$response = $this->actingAs($user)->get('/order/confirm');
 		$response->assertStatus(302); //Be Redirected to delivery form
 		$response->assertSessionMissing('error');
 		$response->assertViewHas('order');
@@ -125,7 +123,7 @@ class MakeOrderTest extends TestCase
 		$response->assertViewHas('confirmationNumber');
 	}
 
-	private function addToBasket($item, $size, $toppings = null) 
+	private function addToBasket($user, $item, $size, $toppings = null) 
 	{
 		$toppingsIds = array();
 
@@ -135,7 +133,7 @@ class MakeOrderTest extends TestCase
 			});
 		}
 
-		$response =  $this->json('POST', '/basket', [
+		$response =  $this->actingAs($user)->json('POST', '/basket', [
 			'item' => $item->id,
 			'size' => $size->id,
 			'toppings' => $toppingsIds
