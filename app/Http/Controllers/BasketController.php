@@ -83,8 +83,11 @@ class BasketController extends Controller
 		session()->forget('delivery');
 
 		if ($request->choice == 'pick-up') {
+
 			session(['delivery.choice' => 'pick-up']);
+
 		} else if ($request->address == 'new') {
+
 			$address = Address::make([
 				'street' => $request->street,
 				'city' => $request->city,
@@ -97,13 +100,16 @@ class BasketController extends Controller
 				'delivery.choice' => 'delivery',
 				'delivery.address' => $address->id
 			]);
+
 		} else if ($request->address == 'existing') {
+
 			$address = Address::find($request->registeredAddress);
 
 			session([
 				'delivery.choice' => 'delivery',
 				'delivery.address' => $address->id
 			]);
+
 		}
 
 		return redirect('/basket/payment');
@@ -121,7 +127,9 @@ class BasketController extends Controller
 
 	public function purchase(Request $request)
 	{
-		$order = $this->createOrderFromSession(); 
+		$order = $this->createOrderFromSession();
+		Cart::destroy();
+
 		return view('basket.purchaseSuccessfull')->withOrder($order);
 	}
 
@@ -136,20 +144,32 @@ class BasketController extends Controller
 		);
 
 		Cart::all()->each(function($cartItem, $hash) use(&$order) {
-			collect($cartItem->getToppings())->each(function($topping, $key) use(&$order, $cartItem) {
-				$order->itemToppingPivots()->attach(
+
+			if (!$cartItem->getToppings()) { //If no toppings
+
+				$order->itemToppingPivots()->save(
 					ItemToppingPivot::create([
 						'item_id' => $cartItem->getItem()->id,
-						'topping_id' => $topping->id
-					])->id, [
-						'quantity' => $cartItem->getQuantity(),
-						'size_id' => $cartItem->getSize()->id
-					]
+						'topping_id' => null
+					])
 				);
-			});
+
+			} else {
+
+				foreach ($cartItem->getToppings() as $topping) {
+					$order->itemToppingPivots()->save(
+						ItemToppingPivot::create([
+							'item_id' => $cartItem->getItem()->id,
+							'topping_id' => $topping->id
+						]), [
+							'quantity' => $cartItem->getQuantity(),
+							'size_id' => $cartItem->getSize()->id
+						]
+					);
+				}
+			}
 		});
 
 		return $order;
 	}
-
 }
