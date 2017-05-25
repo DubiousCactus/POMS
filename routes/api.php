@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::middleware('auth:api')->resource('order', 'APIController');
+
+Route::middleware('auth:api')->get('/orders/new', 'APIController@newOrders');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

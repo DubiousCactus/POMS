@@ -10,6 +10,7 @@
         "johnnyfreeman/laravel-custom-relation": "^0.0.3",
         "laracasts/utilities": "^2.1",
         "laravel/framework": "5.4.*",
+        "laravel/passport": "^2.0",
         "laravel/tinker": "~1.0"
     },
     "require-dev": {

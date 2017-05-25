@@ -53,3 +53,7 @@ Route::post('/basket/purchase', 'BasketController@purchase');
 Route::get('/basket/destroy', function() {
 	Cart::destroy();
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

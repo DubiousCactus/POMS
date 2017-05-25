@@ -85,14 +85,12 @@ class MakeOrderTest extends TestCase
 		$response->assertHeader('location', url('/') . '/login');
 
 		/* Logged in user must not be allowed if his cart is empty */
-		$response = $this->get('/basket/delivery');
+		$response = $this->actingAs($uselessUser)->get('/basket/delivery');
 		$response->assertSessionHas('error'); //Forbidden
 
 		/* Logged in user must be allowed if his cart is not empty */
-		$response = $this->actingAs($user)->get('/order/confirm');
-		$response->assertStatus(302); //Be Redirected to delivery form
-		$response->assertSessionMissing('error');
-		$response->assertViewHas('order');
+		$response = $this->actingAs($user)->get('/basket/delivery');
+		$response->assertStatus(200);
 
 		/* Submit delivery form */
 		/* Guest user must not be allowed */
