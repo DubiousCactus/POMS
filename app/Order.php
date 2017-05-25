@@ -11,7 +11,7 @@ class Order extends Model
 	use HasCustomRelations;
 
     protected $fillable = [
-    	'processed', 'waiting_time', 'address_id', 'user_id'
+    	'processed', 'waiting_time', 'address_id', 'user_id', 'confirmed'
 	];
 
 	public function itemToppingPivots()
