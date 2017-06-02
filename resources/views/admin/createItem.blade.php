@@ -10,6 +10,25 @@
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('item.store') }}">
 						{{ csrf_field() }}
 
+						<div class="form-group{{ $errors->has('category') ? ' has-error' : '' }}">
+                            <label for="category" class="col-md-4 control-label">Category</label>
+
+                            <div class="col-md-6">
+                                <select id="category_id" class="form-control" name="category_id" value="{{ old('category') }}" required autofocus>
+                                	@foreach ($categories as $category)
+		                              	<option value="{{ $category->id }}">{{ $category->name }}</option>
+		                            @endforeach
+                                </select>
+
+                                @if ($errors->has('category'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('category') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
+
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Name</label>
 

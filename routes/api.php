@@ -16,3 +16,5 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/orders/new', 'APIController@newOrders');
 Route::middleware('auth:api')->patch('/orders/{id}/confirm', 'APIController@confirmOrder');
 
+Route::middleware('auth:api')->get('/addresses/{id}', 'APIController@getAddress');
+

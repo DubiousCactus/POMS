@@ -48,6 +48,8 @@ class MakeOrderTest extends TestCase
 			$categoryWithoutToppings->items()->save($value);
 		});
 
+		factory(Topping::class, 3)->create();
+
 		$size = factory(Size::class)->create();
 
 		/* Guest user must get access */

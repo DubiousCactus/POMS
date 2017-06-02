@@ -34,7 +34,7 @@ class ItemsController extends Controller
      */
     public function create()
     {
-        return view('admin.createItem');
+        return view('admin.createItem')->withCategories(Category::all());
     }
 
     /**

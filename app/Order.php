@@ -55,4 +55,15 @@ class Order extends Model
 		return $this->belongsTo(User::class);
 	}
 
+	public static function unconfirmed()
+	{
+		$orders = Order::where(['confirmed' => false])->get();
+
+		$orders->each(function($value, $key) {
+			$value->items = $value->items();
+		});
+
+		return $orders;
+	}
+
 }
