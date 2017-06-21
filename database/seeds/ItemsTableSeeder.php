@@ -16,7 +16,7 @@ class ItemsTableSeeder extends Seeder
         $faker = Factory::create();
 
 		foreach (Category::all() as $category) {
-			for ($i = 0; $i < 15; $i++) { //Create 15 dummy pizzas/items in the database
+			for ($i = 0; $i < 4; $i++) { //Create 4 dummy pizzas/items in the database
 				$item = factory(App\Item::class)->make();
 				$category->items()->save($item);
 			}

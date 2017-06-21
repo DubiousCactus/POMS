@@ -145,7 +145,7 @@ class BasketController extends Controller
 		
 		$order = Auth::user()->orders()->save(
 			Order::make([
-				'address' => $address
+				'address_id' => $address
 			])
 		);
 

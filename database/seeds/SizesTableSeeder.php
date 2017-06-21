@@ -3,7 +3,7 @@
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 
-class ToppingsTableSeeder extends Seeder
+class SizesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,8 +14,7 @@ class ToppingsTableSeeder extends Seeder
     {
         $faker = Factory::create();
 
-        for ($i = 0; $i < 5; $i++) { //Create 5 dummy toppings in the database
-        	factory(App\Topping::class)->create();
-        }
+        for ($i = 0; $i < 3; $i++)
+        	factory(App\Size::class)->create();
     }
 }

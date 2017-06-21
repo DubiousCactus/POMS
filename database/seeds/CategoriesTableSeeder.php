@@ -16,5 +16,7 @@ class CategoriesTableSeeder extends Seeder
 
 		for ($i = 0; $i < 4; $i++) //Create 4 dummy categories
 			factory(App\Category::class)->create();
+
+		App\Category::first()->update(['has_toppings' => true]);
     }
 }
